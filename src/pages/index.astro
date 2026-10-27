@@ -1,10 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// Verified against the repo on 2026-10-20:
-//   python -m pytest tests -q  ->  2514 passed, 0 skipped, 0 failed (2514 collected)
+// Verified against the repo on 2026-10-27:
+//   python -m pytest tests -q  ->  2544 passed, 0 skipped, 0 failed (2544 collected)
 // Keep these in sync with the code before every deploy.
-const TESTS_TOTAL = '2,514';
+const TESTS_TOTAL = '2,544';
 ---
 
 <Layout
@@ -29,7 +29,7 @@ const TESTS_TOTAL = '2,514';
 		<dl class="status">
 			<div><dt>trading</dt><dd>simulated capital (paper)</dd></div>
 			<div><dt>executor</dt><dd>exchange testnet, no real funds</dd></div>
-			<div><dt>tests</dt><dd>{TESTS_TOTAL}, ~145 s, ruff and pyright clean</dd></div>
+			<div><dt>tests</dt><dd>{TESTS_TOTAL}, ~162 s, ruff and pyright clean</dd></div>
 			<div><dt>providers</dt><dd>DeepSeek, Google, OpenRouter, LM Studio</dd></div>
 		</dl>
 	</section>

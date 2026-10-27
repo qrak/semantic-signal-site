@@ -52,7 +52,7 @@
     "capabilities": [
       "multimodal chart analysis: a 1920x1080 Plotly candlestick PNG is sent to the model together with the numeric indicator stack",
       "vector memory: closed trades embedded with BAAI/bge-base-en-v1.5 (768 dimensions) into ChromaDB; 3 nearest past trades plus 20-trade statistics, 5 recent rejections and 3 learned rules are retrieved before each decision",
-      "reflection engine: writes natural-language trading rules from past results, tagged anti_pattern / corrective / best practice",
+      "reflection engine: writes natural-language trading rules from past results, tagged anti_pattern / corrective / best practice; a loss rule needs five losses, a win rate below the closed-trade baseline and a one-sided exact binomial test (alpha 0.05) before it can be tagged anti_pattern, and it always states its sample size and that baseline",
       "expected-value framework in the prompt: fees, the position cap and expectancy read from the bot's own closed trades go into every prompt; the deterministic checks are the symbol whitelist and the position-size cap, and the entry R/R floor is learned from expectancy (min_rr_entry = 0.0)",
       "separate executor service: CCXT order placement, leverage and exchange-side stops behind a seven-check safety guard, with a JSONL verdict journal",
       "free news and sentiment: RSS (CoinDesk, CoinTelegraph, Decrypt, CryptoSlate), Reddit Atom feeds, CoinGecko, DeFiLlama, Alternative.me Fear & Greed",
@@ -80,12 +80,12 @@
     },
     "llm_providers": ["Google AI", "DeepSeek", "OpenRouter", "BlockRun", "local (LM Studio)"],
     "tests": {
-      "collected": 2514,
-      "passing": 2514,
+      "collected": 2544,
+      "passing": 2544,
       "skipped": 0,
       "failing": 0,
       "command": "python -m pytest tests -q",
-      "measured": "2026-10-26",
+      "measured": "2026-10-27",
       "failure_note": "none — the full suite, browser tests included, is green after playwright install chromium"
     },
     "status": {
