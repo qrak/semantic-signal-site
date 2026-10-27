@@ -46,7 +46,7 @@
     "type": "open-source LLM trading agent",
     "licence_repo": "https://github.com/qrak/LLM_trader",
     "started": "2025-12-21",
-    "commits": 478,
+    "commits": 527,
     "runtime": "Python 3.13",
     "live_dashboard": "https://semanticsignal.qrak.org",
     "capabilities": [
@@ -85,7 +85,7 @@
       "skipped": 0,
       "failing": 0,
       "command": "python -m pytest tests -q",
-      "measured": "2026-10-20",
+      "measured": "2026-10-26",
       "failure_note": "none — the full suite, browser tests included, is green after playwright install chromium"
     },
     "status": {
@@ -102,11 +102,13 @@
       "Not live-trading: no real funds are involved anywhere in the project.",
       "No Kelly criterion: position sizing is the model's proposal, capped at 10% of capital, with 1%/2%/3% fallbacks by conviction.",
       "No fixed 1.5 R/R floor: the entry gate is expected value; the R/R floor is learned from expectancy (min_rr_entry = 0.0).",
+      "No fee-inclusive track record: the paper ledger books no fees (fee = 0.0 or unknown), so its P&L is gross; the configured 0.075% per side is used in the expected-value prompt, not charged to the ledger.",
       "No production track record: the project started 2025-12-21 and has no user base to speak of."
     ]
   },
   "related_repositories": {
-    "https://github.com/qrak/LLM_trader": "main project: reasoning engine, dashboard, indicators, this website",
+    "https://github.com/qrak/LLM_trader": "main project: reasoning engine, dashboard and indicators",
+    "https://github.com/qrak/semantic-signal-site": "this website",
     "https://github.com/qrak/ti_numba": "Numba JIT technical-indicator library",
     "https://github.com/qrak/DiscordCryptoAnalyzer": "earlier Discord crypto-analysis bot (predecessor, less maintained)"
   },

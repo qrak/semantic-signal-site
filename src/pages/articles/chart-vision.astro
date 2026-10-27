@@ -57,9 +57,10 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 	<section class="section">
 		<h2>6. The model call and the prompt</h2>
+		<p>The production default is DeepSeek's flash model (<code>provider = deepseek</code>, <code>deepseek-flash</code>); Google Gemini 3.8 Flash, OpenRouter, a local LM Studio server and BlockRun sit in the fallback chain, and a cycle in which every provider fails becomes HOLD rather than an exception (<code>src/managers/provider_orchestrator.py</code>). Each provider call is retried with a named reason, so the log says whether a reply was empty, cut by the output cap, blocked by a content filter or malformed.</p>
 		<p>The model returns structured JSON: signal, confidence, entry, stop, target, size, reasoning, and an explicit invalidation condition — the price or indicator state that would prove the thesis wrong. That invalidation step is a <strong>prompt instruction</strong>, not a tested gate: a model can write a vague one, or skip the discipline the prompt asks for.</p>
-		<p>The expected-value rule works the same way. <code>EV = (win rate × average win) − ((1 − win rate) × average loss) − fees</code> is injected as a decision rule, computed from the bot's own closed trades. The repository does not reject a signal on arithmetic alone.</p>
-		<p>Prompt construction, including that rule and the falsification request, lives in <code>src/analyzer/prompts/template_manager.py</code>.</p>
+		<p>The expected-value rule works the same way. <code>EV = (win rate × average win) − ((1 − win rate) × average loss) − fees</code> is injected as a decision rule, computed from the bot's own closed trades, with fees taken from the configured <code>transaction_fee_percent</code> (0.075% per side, so a round trip costs twice that). The repository does not reject a signal on arithmetic alone.</p>
+		<p>Prompt construction, including that rule and the falsification request, lives in <code>src/analyzer/prompts/template_manager.py</code>; the fee arithmetic is <code>src/analyzer/formatters/ev_formatter.py</code>.</p>
 	</section>
 
 	<section class="section">

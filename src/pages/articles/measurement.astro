@@ -14,7 +14,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 		<h2>The rule</h2>
 		<p>No number on this site is typed by hand. The tables below are printed by one script from the bot's own runtime files plus a single public price request:</p>
 		<pre><code>python scripts/results_report.py</code></pre>
-		<p>Inputs: <code>data/trading/statistics.json</code>, <code>data/trading/api_costs.json</code>, <code>data/trading/trade_history.db</code>, <code>data/trading/metrics/cycles.jsonl</code>, and one Binance klines request for the benchmark. When the ledger changes, the site changes with it — including the numbers that look worse.</p>
+		<p>Inputs: <code>data/trading/statistics.json</code>, <code>data/trading/api_costs.json</code>, <code>data/trading/trade_history.db</code>, <code>data/trading/metrics/cycles.jsonl</code>, and one Binance klines request for the benchmark. When the ledger changes, the site changes with it — including the numbers that look worse. The figures on this page are the output of a run on <strong>2026-10-27</strong>; the cost totals grow with every cycle, so the live dashboard is the place to read them.</p>
 	</section>
 
 	<section class="section">
@@ -24,7 +24,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 			<tr><th>Instrument</th><td>BTC/USDC, 4-hour candles</td></tr>
 			<tr><th>Mode</th><td>Paper book, 10,000 USDC simulated; decisions forwarded to a testnet executor</td></tr>
 			<tr><th>Closed trades</th><td>12 rows (2 excluded from statistics, see below)</td></tr>
-			<tr><th>Analysis cycles</th><td>48 recorded (2026-10-19 → 2026-10-26)</td></tr>
+			<tr><th>Analysis cycles</th><td>50 recorded (2026-10-19 → 2026-10-26)</td></tr>
 		</table>
 	</section>
 
@@ -46,31 +46,31 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 	<section class="section">
 		<h2>Inference cost</h2>
 		<table class="facts">
-			<tr><th>Total</th><td>$6.00</td></tr>
+			<tr><th>Total (2026-10-27)</th><td>$6.02</td></tr>
 			<tr><th>Google (chart vision)</th><td>$3.88</td></tr>
-			<tr><th>DeepSeek (official API)</th><td>$2.12</td></tr>
-			<tr><th>Input / output tokens</th><td>8,073,341 / 3,834,551</td></tr>
-			<tr><th>Net after inference</th><td>+$7.95</td></tr>
+			<tr><th>DeepSeek (official API)</th><td>$2.14</td></tr>
+			<tr><th>Input / output tokens</th><td>8,113,597 / 3,853,269</td></tr>
+			<tr><th>Net after inference</th><td>+$7.93</td></tr>
 		</table>
-		<p>Costs are the provider rate-table estimates the bot records while running (<code>config/model_pricing.json</code>, <code>config/peak_rates.json</code>), not invoice reconciliation. Per cycle, across the 48 recorded cycles: mean <strong>$0.0121</strong>, median latency <strong>266 s</strong>.</p>
-		<p>Inference cost is not a footnote here: the expected-value rule that the model is given reads from the same trade history, and $6.00 of model usage against $13.95 of gross paper profit is most of the result.</p>
+		<p>Costs are the provider rate-table estimates the bot records while running (<code>config/model_pricing.json</code>, <code>config/peak_rates.json</code>), not invoice reconciliation. Per cycle, across the 50 recorded cycles: mean <strong>$0.0117</strong>, median latency <strong>266 s</strong>.</p>
+		<p>Inference cost is not a footnote here: the expected-value rule that the model is given reads from the same trade history, and $6.02 of model usage against $13.95 of gross paper profit is most of the result.</p>
 	</section>
 
 	<section class="section">
 		<h2>The benchmark</h2>
 		<table class="facts">
-			<tr><th>BTC/USDC in the window</th><td>81,245.48 → 79,758.34</td></tr>
-			<tr><th>Buy and hold, same window</th><td>−1.83%</td></tr>
+			<tr><th>BTC/USDC in the window</th><td>81,245.48 → 80,036.26 (222 closed 4h bars)</td></tr>
+			<tr><th>Buy and hold, same window</th><td>−1.49%</td></tr>
 			<tr><th>Bot, paper ledger</th><td>+0.14%</td></tr>
 		</table>
-		<p>The difference is about two percentage points over five weeks. It is the kind of gap that a single trade, a fee assumption or a different start date can erase, and it is why the comparison is stated with its window and never as a result.</p>
+		<p>The difference is about 1.6 percentage points over five weeks. It is the kind of gap that a single trade, a fee assumption or a different start date can erase, and it is why the comparison is stated with its window and never as a result. The benchmark deliberately stops at the last bar that closed inside the window — counting the bar the exchange is still forming makes the same window read −1.6%, −1.7% or −1.8% depending on the minute.</p>
 	</section>
 
 	<section class="section">
 		<h2>The gaps</h2>
 		<ul>
 			<li><strong>Twelve trades cannot separate skill from noise.</strong> Any statistic here has an error bar wider than its value.</li>
-			<li><strong>Fees are recorded as zero.</strong> The paper book stores <code>fee = 0.0</code> on every row. A 0.15% round trip on each of the 12 trades (at roughly 8% of capital per position, about $1.20 per trade) would remove most of the +$13.95 gain. The ledger is gross of trading costs.</li>
+			<li><strong>Fees are configured but not booked.</strong> <code>transaction_fee_percent = 0.00075</code> (0.075% per side) is the rate the expected-value block uses when it argues with the model. The paper ledger stores <code>fee = 0.0</code> on booked rows and <code>NULL</code> where a fill fee is unknown, and the close path refuses to substitute the configured rate for an unknown fee — so the P&amp;L above is <em>gross</em> of trading costs. At 0.075% per side and roughly 8% of capital per position, a round trip costs about 0.15% of the position (≈ $1.20 at $10,000 across 12 trades ≈ $14), which is the whole gain.</li>
 			<li><strong>Simulated fills.</strong> Paper exits are modelled, not matched. The two excluded rows are a small demonstration of how far a sandbox fill can be from the real market.</li>
 			<li><strong>One instrument, one exchange, one month.</strong> No cross-sectional test, no regime test, no out-of-sample period.</li>
 			<li><strong>Costs are estimates.</strong> Provider rate tables, not invoices.</li>
