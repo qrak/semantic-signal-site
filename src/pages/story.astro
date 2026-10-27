@@ -10,7 +10,7 @@ const TESTS_TOTAL = '2,653';
 
 <Layout
 	title="The Full Story & Technology — Semantic Signal"
-	description="The complete engineering history of an open-source, vision-capable LLM crypto bot: real commit dates, the indicator engine, deterministic risk limits, and an honest status report. Trades simulated capital by default."
+	description="The complete engineering history of an open-source, vision-capable LLM crypto bot: real commit dates, the indicator engine, deterministic risk limits, and a status report. Trades simulated capital by default."
 >
 	<article class="article-container">
 		<header class="article-header">
@@ -143,23 +143,6 @@ cp keys.env.example keys.env    # add GOOGLE_STUDIO_API_KEY, DEEPSEEK_API_KEY or
 python start.py                 # dashboard at http://localhost:8000</code></pre>
 			<p class="caption">Paper trading is the default. The executor only sees decisions when you enable it — and it defaults to testnet.</p>
 		</section>
-
-		<section class="section errata">
-			<h2>6. Errata — what this page used to claim</h2>
-			<p>Kept visible on purpose, because a page that silently edits its own history is worth less than one that shows its corrections:</p>
-			<ul>
-				<li>"Kelly Criterion position sizing" — removed. No Kelly code exists in the repo.</li>
-				<li>"a hard expected-value or 1.5 R/R gate rejects the signal" — removed. The current code does not enforce an expected-value gate, and <code>min_rr_entry = 0.0</code>.</li>
-				<li>"how the system earns real money" — removed. The executor runs against an exchange testnet, and no real capital is at stake.</li>
-				<li>"1,270 automated tests" (August) → 1,549 (September) → {TESTS_TOTAL} today. The number moves with the code, so it is re-measured against <code>HEAD</code> before every deploy and the date of the run is printed next to it.</li>
-				<li>"2,544 tests, measured 27 October" — corrected later the same day to {TESTS_TOTAL}, after the day's commits landed. A snapshot without the commit it was taken on goes stale within hours.</li>
-				<li>"97 Numba-compiled functions" (September) → 79 today: unused indicator functions were deleted in October, so the figure above comes from re-counting the tree (<code>grep -rhoE "@njit" src/indicators | wc -l</code> = 79, 125 across the whole <code>src/</code>).</li>
-				<li>Chart vision and vector memory were previously dated February–April 2026. The code says 22 Dec 2025 and 16 May 2026 — the timeline above is the one that matches <code>git log</code>. The January phase also used to say "the <code>ChartGenerator</code> lands 16 Jan", which contradicted that date: <code>chart_generator.py</code> and the class exist from 22 Dec 2025, and 16 Jan is when the AI-optimized chart and its export retries landed.</li>
-				<li>"multimodal support via OpenRouter on 28 December 2025" — removed. No commit carries that date; OpenRouter is already in the config of the first commit (21 Dec 2025).</li>
-				<li>The page used to open with a first-person anecdote set in a Wrocław warehouse, written in the past tense. Removed: it read as a statement that the author had left the city and the job, and this page describes the system, not the author.</li>
-				<li>"a learned rule is deactivated once it reaches four half-lives" — removed. Nothing in <code>src/</code> expires rules by age: an aged rule is labelled <code>legacy</code> and keeps losing retrieval score. A rule leaves only through an explicit <code>deactivate_semantic_rule()</code> call, and the first rule retired that way was an <code>anti_pattern</code> whose group was keyed on the exit reason — its "0% win rate" came from the filter, not from the trades.</li>
-			</ul>
-		</section>
 	</article>
 </Layout>
 
@@ -279,14 +262,5 @@ python start.py                 # dashboard at http://localhost:8000</code></pre
 		margin: 1rem 0;
 		text-align: center;
 		overflow-x: auto;
-	}
-
-	.errata {
-		border-top: 1px solid var(--border-color);
-		padding-top: 1.5rem;
-	}
-
-	.errata h2 {
-		color: #fbbf24;
 	}
 </style>
