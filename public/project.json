@@ -80,12 +80,14 @@
     },
     "llm_providers": ["Google AI", "DeepSeek", "OpenRouter", "BlockRun", "local (LM Studio)"],
     "tests": {
-      "collected": 2544,
-      "passing": 2544,
+      "collected": 2653,
+      "passing": 2653,
       "skipped": 0,
       "failing": 0,
       "command": "python -m pytest tests -q",
       "measured": "2026-10-27",
+      "measured_at_commit": "8664fa4",
+      "duration_seconds": 160,
       "failure_note": "none — the full suite, browser tests included, is green after playwright install chromium"
     },
     "status": {

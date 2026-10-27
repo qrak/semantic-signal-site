@@ -11,7 +11,7 @@
 Key facts, all verifiable in the repository:
 
 - Language / runtime: Python 3.13 (bot), Astro (this site)
-- Test suite: 2,544 tests collected, all passing, none skipped, none failing — `python -m pytest tests -q` (measured 2026-10-27, browser suite excluded by the `integration` marker)
+- Test suite: 2,653 tests collected, all passing, none skipped, none failing — `python -m pytest tests -q` (measured 2026-10-27 at commit `8664fa4`, 160 s, the 34 `integration`-marked Playwright tests included)
 - 79 Numba-compiled indicator functions in `src/indicators/` (125 across `src/`)
 - Data per cycle: 999 candles, 50-level order book, funding rate, 24h volume, 500 recent trades
 - Chart image sent to the model: 1920×1080 PNG (Plotly + Kaleido)

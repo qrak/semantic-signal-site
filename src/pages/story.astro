@@ -1,11 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// Verified against the repo on 2026-10-27 (see the "Where these numbers come
-// from" section at the bottom of this page):
-//   python -m pytest tests -q          -> 2544 passed, 0 skipped, 0 failed (2544 collected)
+// Verified against the repo on 2026-10-27 at HEAD 8664fa4 (see the "Where these
+// numbers come from" section at the bottom of this page):
+//   python -m pytest tests -q          -> 2653 passed, 0 skipped, 0 failed (2653 collected, 160 s)
 //   grep -rhoE "@njit" src/indicators  -> 79 Numba-compiled functions (125 across src/)
-const TESTS_TOTAL = '2,544';
+const TESTS_TOTAL = '2,653';
 ---
 
 <Layout
@@ -14,7 +14,7 @@ const TESTS_TOTAL = '2,544';
 >
 	<article class="article-container">
 		<header class="article-header">
-			<div class="meta">Published July 2026 · last updated 15 October 2026 · by @qrak</div>
+			<div class="meta">Published July 2026 · last updated 27 October 2026 · by @qrak</div>
 			<h1>A trading bot that reads charts, keeps a memory of its trades, and learns from the closed ones</h1>
 			<p class="subtitle">The engineering history of an open-source, vision-capable crypto bot — first commit 21 December 2025.</p>
 		</header>
@@ -22,10 +22,10 @@ const TESTS_TOTAL = '2,544';
 		<hr class="divider" />
 
 		<section class="section">
-			<h2>1. The Wrocław warehouse spark</h2>
-			<p>In December 2025 I was living in Wrocław, Poland, working 8-hour warehouse shifts. My back was sore, my energy depleted, and my mind was stuck on one question: <em>why are all the "AI trading bots" out there so dumb?</em></p>
-			<p>I did what every YouTube tutorial recommends. Pull RSI, MACD and Bollinger Bands in Python, write a prompt template, dump the floats into an LLM API. The decisions came back confident, articulate — and wrong. <code>"RSI is at 28, oversold. BUY."</code> Then the market went down instead, and the paper portfolio went with it.</p>
-			<p>The model was not the problem. The architecture was. I had built a stateless calculator and called it a reasoning engine.</p>
+			<h2>1. Origin — a stateless calculator</h2>
+			<p>The first commit is dated 21 December 2025; the project has been written outside working hours in Wrocław since then. Every date and number below is checked against the repository.</p>
+			<p>The first version did what the common tutorial prescribes. Pull RSI, MACD and Bollinger Bands in Python, write a prompt template, put the floats into an LLM API. The answers came back confident and articulate — <code>"RSI is at 28, oversold. BUY."</code> — and the paper portfolio went the other way.</p>
+			<p>The model was not the limitation. The architecture was: a stateless calculator, sent to work as a reasoning engine. Every cycle started from zero, and no closed trade could change the next decision.</p>
 		</section>
 
 		<section class="section">
@@ -36,7 +36,7 @@ const TESTS_TOTAL = '2,544';
 					<div class="timeline-dot"></div>
 					<div class="timeline-content">
 						<h3>Phase 1 — December 2025: the stateless calculator</h3>
-						<p>First commit 21 Dec 2025, multimodal support via OpenRouter on 28 Dec. The <code>candle_limit = 999</code> value has been in <code>config.ini</code> since that very first commit, the order book is fetched at 50 levels, and the bot had no memory of anything it did.</p>
+						<p>First commit 21 Dec 2025, with OpenRouter already listed as a provider in that commit's config; no commit is dated between 23 and 30 December. The <code>candle_limit = 999</code> value has been in <code>config/config.ini</code> since that very first commit, the order book is fetched at 50 levels, and the bot had no memory of anything it did.</p>
 					</div>
 				</div>
 
@@ -44,7 +44,7 @@ const TESTS_TOTAL = '2,544';
 					<div class="timeline-dot"></div>
 					<div class="timeline-content">
 						<h3>Phase 2 — January 2026: the bot gets eyes</h3>
-						<p>The dashboard server lands 6 Jan; the <code>ChartGenerator</code> (16 Jan) renders OHLCV and RSI into a PNG the model can actually look at, with the image-export retry logic that Plotly/Kaleido makes necessary. The bot stops reading floats and starts reading a chart.</p>
+						<p>The dashboard server lands 6 Jan. Chart rendering is older than this phase: <code>chart_generator.py</code> and the <code>ChartGenerator</code> class are in the repository from 22 Dec 2025. On 16 Jan the chart becomes the AI-optimized 1920×1080 PNG the model actually looks at, with the image-export retry logic that Plotly/Kaleido makes necessary. The bot stops reading floats and starts reading a chart.</p>
 					</div>
 				</div>
 
@@ -52,7 +52,7 @@ const TESTS_TOTAL = '2,544';
 					<div class="timeline-dot"></div>
 					<div class="timeline-content">
 						<h3>Phase 3 — May 2026: the brain</h3>
-						<p>16 May: the vector-memory era. <code>brain_experience</code>, <code>brain_context</code> and <code>brain_reflection</code> arrive — closed trades become 768D embeddings in ChromaDB, retrievable before the next decision, with a reflection pass that writes rules in plain language. A few days earlier (12 May) came the blunt commit message "make bot profitable with Gemini Flash 3 Preview" — that one aged badly, and I left it in the history on purpose.</p>
+						<p>16 May: the vector-memory era. <code>brain_experience</code>, <code>brain_context</code> and <code>brain_reflection</code> arrive — closed trades become 768D embeddings in ChromaDB, retrievable before the next decision, with a reflection pass that writes rules in plain language. A few days earlier (12 May) came the blunt commit message "make bot profitable with Gemini Flash 3 Preview". The claim did not hold, and the commit stays in the history.</p>
 					</div>
 				</div>
 
@@ -118,19 +118,19 @@ def supertrend_numba(high: np.ndarray, low: np.ndarray, close: np.ndarray,
 			<h3>What is <em>not</em> in here</h3>
 			<ul>
 				<li><strong>No Kelly criterion.</strong> An earlier version of this page claimed Kelly-sized positions. There is no Kelly code in the repository. Position size is the model's proposal, clamped to a 10% of capital cap, with 1% / 2% / 3% fallbacks by conviction level.</li>
-				<li><strong>No magic win rate.</strong> I have no sustained profitable period to show, so I do not quote one.</li>
+				<li><strong>No win rate.</strong> No sustained profitable period exists to quote, so this page quotes none.</li>
 				<li><strong>No backtest-to-live claim.</strong> Simulated fills have no slippage, no partial fills and no liquidity limits. Paper numbers are not live numbers.</li>
 			</ul>
 		</section>
 
 		<section class="section">
-			<h2>4. Honest status — September 2026</h2>
+			<h2>4. Status — October 2026</h2>
 			<ul>
 				<li><strong>Trading:</strong> simulated capital only (a 10,000 USDC paper book). No real funds are involved anywhere in this project.</li>
 				<li><strong>Tests:</strong> {TESTS_TOTAL} collected, every one passing, none skipped and none failing — the browser suite included, after <code>playwright install chromium</code>. <code>python -m pytest tests -q</code>, measured 27 October 2026.</li>
 				<li><strong>Executor:</strong> implemented as a separate service and wired to an exchange <strong>testnet</strong> (<code>ENABLE_TESTNET=true</code>, sandbox endpoints). It has placed test orders and journals their verdicts; live trading with real money is not enabled.</li>
 				<li><strong>Profitability:</strong> unproven. Development has had losing stretches and the code comments admit it. If that ever changes, this page changes with it.</li>
-				<li><strong>Source:</strong> the whole thing is at <a href="https://github.com/qrak/LLM_trader" target="_blank" rel="noopener">github.com/qrak/LLM_trader</a>. Read the code before you believe a word of this page.</li>
+				<li><strong>Source:</strong> the whole thing is at <a href="https://github.com/qrak/LLM_trader" target="_blank" rel="noopener">github.com/qrak/LLM_trader</a>. The repository, not this page, is the source of truth.</li>
 			</ul>
 		</section>
 
@@ -151,9 +151,12 @@ python start.py                 # dashboard at http://localhost:8000</code></pre
 				<li>"Kelly Criterion position sizing" — removed. No Kelly code exists in the repo.</li>
 				<li>"a hard expected-value or 1.5 R/R gate rejects the signal" — removed. The current code does not enforce an expected-value gate, and <code>min_rr_entry = 0.0</code>.</li>
 				<li>"how the system earns real money" — removed. The executor runs against an exchange testnet, and no real capital is at stake.</li>
-				<li>"1,270 automated tests" (August) → 1,549 (September) → {TESTS_TOTAL} today. The number moves with the code, so it is now generated from a test run, not typed from memory.</li>
-				<li>"97 Numba-compiled functions" (September) → 79 today: unused indicator functions were deleted in October, so the figure above is now printed from <code>grep -rhoE "@njit" src/indicators | wc -l</code>.</li>
-				<li>Chart vision and vector memory were previously dated February–April 2026. The code says 22 Dec 2025 and 16 May 2026 — the timeline above is the one that matches <code>git log</code>.</li>
+				<li>"1,270 automated tests" (August) → 1,549 (September) → {TESTS_TOTAL} today. The number moves with the code, so it is re-measured against <code>HEAD</code> before every deploy and the date of the run is printed next to it.</li>
+				<li>"2,544 tests, measured 27 October" — corrected later the same day to {TESTS_TOTAL}, after the day's commits landed. A snapshot without the commit it was taken on goes stale within hours.</li>
+				<li>"97 Numba-compiled functions" (September) → 79 today: unused indicator functions were deleted in October, so the figure above comes from re-counting the tree (<code>grep -rhoE "@njit" src/indicators | wc -l</code> = 79, 125 across the whole <code>src/</code>).</li>
+				<li>Chart vision and vector memory were previously dated February–April 2026. The code says 22 Dec 2025 and 16 May 2026 — the timeline above is the one that matches <code>git log</code>. The January phase also used to say "the <code>ChartGenerator</code> lands 16 Jan", which contradicted that date: <code>chart_generator.py</code> and the class exist from 22 Dec 2025, and 16 Jan is when the AI-optimized chart and its export retries landed.</li>
+				<li>"multimodal support via OpenRouter on 28 December 2025" — removed. No commit carries that date; OpenRouter is already in the config of the first commit (21 Dec 2025).</li>
+				<li>The page used to open with a first-person anecdote set in a Wrocław warehouse, written in the past tense. Removed: it read as a statement that the author had left the city and the job, and this page describes the system, not the author.</li>
 				<li>"a learned rule is deactivated once it reaches four half-lives" — removed. Nothing in <code>src/</code> expires rules by age: an aged rule is labelled <code>legacy</code> and keeps losing retrieval score. A rule leaves only through an explicit <code>deactivate_semantic_rule()</code> call, and the first rule retired that way was an <code>anti_pattern</code> whose group was keyed on the exit reason — its "0% win rate" came from the filter, not from the trades.</li>
 			</ul>
 		</section>
