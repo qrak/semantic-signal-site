@@ -3,57 +3,70 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 ---
 
 <ArticleLayout
-	title="From Paper to a Live Executor: Why Order Placement Is a Separate Service — Semantic Signal"
-	description="Why Semantic Signal separates reasoning from order execution, the seven checks every decision passes in llm_trader_executor, and the honest state of the live pipeline (testnet, no real funds)."
-	meta="Article · first published August 2026 · updated September 2026"
+	title="Order Execution as a Separate Service — Semantic Signal"
+	description="Why the engine does not place orders itself, the seven checks a decision passes in the executor before an order leaves, the verdict journal, and the state of the live path."
+	meta="Article · first published August 2026 · updated October 2026"
 >
-	<span slot="title">From paper to a live executor: why order placement is a separate service</span>
-	<p slot="subtitle" class="subtitle">The engine thinks. The executor acts. Keeping those apart is the difference between a research prototype and something you would trust near a real exchange.</p>
+	<span slot="title">Order execution as a separate service</span>
+	<p slot="subtitle" class="subtitle">Reasoning and order placement are two processes with opposite failure modes. This page describes the split, the checks in between, and what is still missing before real capital.</p>
 
 	<section class="section">
-		<h2>Two very different jobs</h2>
-		<p>Reasoning and execution have opposite failure modes. Reasoning is slow, deliberate and benefits from context. Execution is fast, unforgiving and benefits from discipline.</p>
-		<p>Semantic Signal splits them: the engine produces an <strong>atomic JSON decision</strong> — symbol, side, size, stop-loss, take-profit, reasoning. A separate service, <code>llm_trader_executor</code>, does everything on the exchange side: CCXT order placement, leverage, exchange-side stops, and a JSONL verdict journal that answers the only question that matters — <em>what actually happened to this order?</em></p>
+		<h2>Two processes</h2>
+		<p>In the first versions the engine placed its own orders in the same event loop. That worked until it did not: a model API timeout or a database lock could freeze the loop, and a position could sit open with nothing watching it. The engine that reasons and the process that talks to the exchange are now separate.</p>
+		<p>The engine writes an atomic decision: symbol, side, size, stop, target, leverage, confidence, reasoning and an <code>order_id</code>. The executor — a small service in its own repository, <code>llm_trader_executor</code> — reads decisions over HTTP with a JSON-file fallback, places orders through CCXT, sets exchange-side protection, and writes a journal entry for each decision. If the engine dies, the executor and the exchange-side stop stay alive with the position.</p>
+		<p>The executor is <strong>not open source yet</strong>; the engine is. That asymmetry is a fact about the current state, not a claim that the hidden part is more trustworthy.</p>
 	</section>
 
 	<section class="section">
-		<h2>The guard chain in the executor</h2>
-		<p>Every decision is checked in order before a single order can leave the process (<code>src/safety.py</code>):</p>
+		<h2>The decision object</h2>
+		<p>A decision is a small JSON document: <code>order_id</code>, <code>symbol</code>, <code>signal</code> (BUY, SELL, CLOSE, UPDATE), <code>quantity</code>, <code>entry_price</code>, <code>stop_loss</code>, <code>take_profit</code>, <code>leverage</code>, <code>confidence</code>, <code>reasoning</code>. The <code>order_id</code> is the idempotency key: the same decision can arrive through the API and through the file fallback with different metadata, and only the first one executes.</p>
+	</section>
+
+	<section class="section">
+		<h2>Checks before an order leaves</h2>
+		<p>The executor validates every entry in <code>src/safety.py</code> of its own repository, in this order:</p>
 		<ol>
-			<li><strong>Duplicate detection</strong> — a content hash of the decision, not a timestamp, persisted to disk so a bot restart cannot re-execute the same trade;</li>
+			<li><strong>Duplicate detection</strong> — by <code>order_id</code> and by a content hash of the decision, persisted to disk, so a restart cannot re-execute the same trade;</li>
 			<li><strong>Actionable signal</strong> — anything that is not a known entry, close or update is dropped;</li>
-			<li><strong>Confidence floor</strong> — entries below the configured minimum confidence are blocked, while exits and stop updates are deliberately exempt (you do not want a low-confidence signal keeping you in a losing trade);</li>
+			<li><strong>Confidence floor</strong> — entries below the configured minimum are blocked; CLOSE and UPDATE are deliberately exempt, because a low-confidence signal should still be able to exit a losing position;</li>
 			<li><strong>Quantity sanity</strong> — entries need a positive size;</li>
 			<li><strong>Leverage cap</strong> — anything above the configured maximum is rejected;</li>
-			<li><strong>Order type enforcement</strong> — with market entries configured, limit orders are refused rather than quietly resized;</li>
-			<li><strong>Max position notional</strong> — <code>quantity × entry price</code> has to fit the USDC limit, re-priced from the exchange if the decision arrives without a price.</li>
+			<li><strong>Order type</strong> — with market entries configured, limit orders are refused rather than quietly resized;</li>
+			<li><strong>Maximum position notional</strong> — <code>quantity × entry price</code> has to fit the USDC limit, re-priced from the exchange when the decision arrives without a price.</li>
 		</ol>
-		<p>On the engine side the same decision already passed the configured pair (<code>crypto_pair = BTC/USDC</code>, 4h — the bot does not roam the market), the shared R/R floor policy and the position cap. A spot SELL is capped to what is actually held, so a short can never be created by accident. Stop distances come from the regime risk profile (a tight 1.5× ATR in choppy markets, a wider 2× ATR in trends) instead of a fixed percentage.</p>
-		<p>If governance or risk validation cannot decide safely, the system <strong>fails closed</strong>: no order, no exception. Soft exits trigger at candle close; hard exits poll live prices every 15 minutes.</p>
+		<p>On the engine side the same decision already passed the configured-symbol guard, the position-size cap and the entry R/R policy (<a href="/articles/chart-vision/">described in the cycle article</a>). A spot SELL is capped to what is actually held, so a short cannot be created by accident. If any check cannot decide safely, the system fails closed: no order, no exception path around it.</p>
 	</section>
 
 	<section class="section">
-		<h2>The verdict journal</h2>
-		<p>A successful HTTP call is not proof that an order exists. Instead of assuming, the executor appends one line per processed decision to a JSONL journal — <code>executed</code>, <code>blocked</code> or <code>error</code>, with the reason, keyed by the bot's own <code>order_id</code>. The engine reads that file back to find out what actually happened to <em>its</em> order.</p>
-		<p>Friction is reported, not swallowed: if position size gets clamped or a decision is blocked, that shows up in the journal and on the dashboard. When a state genuinely cannot be determined, the dashboard says so instead of showing a green checkmark it cannot back up.</p>
+		<h2>Why a journal</h2>
+		<p>A successful HTTP call is not proof that an order exists. Instead of assuming, the executor appends one JSONL line per processed decision — <code>executed</code>, <code>blocked</code> or <code>error</code> — with the reason, keyed by the engine's <code>order_id</code>. The engine reads that file back to find out what actually happened to its own decision, and the dashboard shows the result.</p>
+		<p>Friction is reported rather than swallowed: a clamped position size or a blocked decision appears in the journal and on the dashboard, and an unknown state is shown as unknown instead of as a green checkmark.</p>
 	</section>
 
 	<section class="section">
-		<h2>Where this actually stands (September 2026)</h2>
-		<p>No overselling:</p>
+		<h2>Where this stands (October 2026)</h2>
 		<ul>
-			<li>The executor runs against an exchange <strong>testnet</strong> (<code>ENABLE_TESTNET=true</code>, sandbox endpoints). It has placed test orders — the verdict journal has entries — and it has never touched real funds.</li>
-			<li>It was last exercised in <strong>August 2026</strong>. Since then the work went into the brain, the tests and the R/R policy, so the live path is the least-recently-certified part of the system.</li>
-			<li>The part I trust least is <strong>reconciliation</strong>: proving that what the exchange holds matches what the journal claims. That is exactly what has to be boring and reliable before any real capital is considered — and it is not there yet.</li>
-			<li>The executor is a <strong>separate local service</strong> and is not open-sourced yet; the engine is.</li>
+			<li>The executor runs against an exchange <strong>testnet</strong> (<code>ENABLE_TESTNET=true</code>, sandbox endpoints). It has placed test orders and it has never touched real funds.</li>
+			<li>It was last exercised in <strong>August 2026</strong>. Since then the work went into the engine, the tests and the R/R policy, so the live path is the least recently certified part of the system.</li>
+			<li>The weakest part is <strong>reconciliation</strong>: proving that what the exchange holds matches what the journal claims, including late fills and partially executed orders. That has to be boring and reliable before any real capital is considered, and it is not there yet.</li>
+			<li>Capital stays simulated until the pipeline has survived a long enough period to say something. That is a decision, not a limitation being hidden.</li>
 		</ul>
-		<p>Capital stays simulated until the pipeline proves itself over a sustained period. That is a deliberate decision, not a limitation to hide: demo and live are different worlds, and a system should earn live trading the way it earns everything else — by surviving its own history.</p>
+	</section>
+
+	<section class="section">
+		<h2>What this does not prove</h2>
+		<ul>
+			<li><strong>Testnet is not live.</strong> Fills, slippage, rate limits, maintenance windows and exchange rejects behave differently with real orders and real liquidity.</li>
+			<li><strong>Guards reduce risk, they do not remove it.</strong> Each check prevents a known class of mistake; none of them makes a bad thesis profitable.</li>
+			<li><strong>The journal is only as true as reconciliation.</strong> A blocked or executed line is a record of what the executor believes it did.</li>
+			<li><strong>The executor is closed source for now</strong>, so the seven checks above cannot be verified by a reader of this site — only by their effect on the journal.</li>
+		</ul>
 	</section>
 
 	<div class="cta-box">
-		<p>The dashboard shows live position state and the audit trail behind every decision.</p>
+		<p>The dashboard shows the current position, the latest decision and the audit trail behind it.</p>
 		<a href="https://semanticsignal.qrak.org" target="_blank" rel="noopener" class="btn btn-primary">Live dashboard ↗</a>
-		<a href="https://github.com/qrak/LLM_trader" target="_blank" rel="noopener" class="btn btn-secondary">GitHub ↗</a>
+		<a href="https://github.com/qrak/LLM_trader" target="_blank" rel="noopener" class="btn btn-secondary">Engine source ↗</a>
 	</div>
 
 	<div class="disclaimer-box">

@@ -1,0 +1,108 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+---
+
+<ArticleLayout
+	title="Replaying 55 Historical Setups: One Comparison — Semantic Signal"
+	description="An offline replay of the bot's own recorded cycles through two prompt versions and two model generations: what matched, what did not, and what such a replay can and cannot show."
+	meta="Article · published October 2026 · replay run 2026-09-18"
+>
+	<span slot="title">Replaying 55 historical setups: one comparison</span>
+	<p slot="subtitle" class="subtitle">The engine keeps every cycle it has ever run. This is what happened when a run of those cycles was replayed through two prompt versions instead of trusted as history.</p>
+
+	<section class="section">
+		<h2>What was replayed</h2>
+		<p>Every cycle is recorded: the prompt that was sent, the model's answer, the parsed decision and the market context. The replay took <strong>55 recorded setups</strong> — 45 cycles that historically produced an entry (BUY or SELL) and 10 that produced a CLOSE — and sent each one back through the pipeline with a fixed prompt.</p>
+		<p>Three variants, all on the same replay data:</p>
+		<ul>
+			<li><strong>K</strong> — the prompt version in use before the rewrite, on the model generation of the time;</li>
+			<li><strong>W</strong> — the current prompt, on the same model generation;</li>
+			<li><strong>W36</strong> — the current prompt, on the previous model generation.</li>
+		</ul>
+		<p>Each variant produced 55 calls, 165 in total, run once, on 2026-09-18.</p>
+	</section>
+
+	<section class="section">
+		<h2>What was measured</h2>
+		<p>Two things only: whether the variant <strong>entered</strong> on a historical entry setup, and whether it chose the <strong>same direction</strong> as the historical decision. No trade outcome, P&amp;L, slippage or fee was scored — the replay does not know what would have happened, only what each variant said.</p>
+		<table class="data">
+			<thead>
+				<tr><th>Variant</th><th>Entries / 45</th><th>Same direction</th><th>Decisions</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>K — old prompt</td><td>0 (0%)</td><td>0</td><td>HOLD 45</td></tr>
+				<tr><td>W — current prompt</td><td>9 (20%)</td><td>9</td><td>HOLD 36, BUY 5, SELL 4</td></tr>
+				<tr><td>W36 — current prompt, older model</td><td>15 (33%)</td><td>15</td><td>HOLD 30, BUY 11, SELL 4</td></tr>
+			</tbody>
+		</table>
+		<p>On the 10 CLOSE setups the same difference appears: the old prompt produced CLOSE 2, UPDATE 2 and HOLD 6; the current prompt produced HOLD 10.</p>
+	</section>
+
+	<section class="section">
+		<h2>Where the variants disagree</h2>
+		<p>Comparing the two model generations under the same current prompt: <strong>31 of 45</strong> decisions matched. Of the disagreements, 10 are cases where the older model entered and the newer one held, and 4 where the newer one entered and the older one held; the remaining agreement includes 5 setups where both entered in the same direction.</p>
+		<p>That matrix is the most useful part of the result: changing the model moved more decisions than the prompt rewrite did, and neither change was evaluated against an outcome.</p>
+	</section>
+
+	<section class="section">
+		<h2>Run quality</h2>
+		<ul>
+			<li>165 calls, 0 failures, 0 retries required;</li>
+			<li>every response finished normally (<code>finishReason: STOP</code>), no truncation;</li>
+			<li>mean call latency <strong>20.4 s</strong>.</li>
+		</ul>
+		<p>Those numbers only say the replay itself behaved; they say nothing about the quality of the decisions.</p>
+	</section>
+
+	<section class="section">
+		<h2>What it established</h2>
+		<p>One concrete finding: <strong>the old prompt did not enter on any of the 45 historical entry setups</strong>, while the current one entered on 9. Whatever else is true, the rewrite changed behaviour from "almost never act" to "act sometimes". That is a calibration change, and calibration is not skill.</p>
+		<p>It also made the model-generation difference visible and measurable, which is the reason to keep recorded cycles at all: without them, the only comparison available would be a memory of how the bot used to feel.</p>
+	</section>
+
+	<section class="section">
+		<h2>What it does not establish</h2>
+		<ul>
+			<li><strong>No outcomes were scored.</strong> Entering more often is not better; it is only different. This replay cannot say which variant would have made money.</li>
+			<li><strong>The sample is small and from one period.</strong> 55 setups, one instrument, one language model family.</li>
+			<li><strong>One run per variant.</strong> No repeats, so the run-to-run variance of the model is not measured.</li>
+			<li><strong>Historical setups are not a neutral test.</strong> They were selected because the bot acted on them at the time; the replay deliberately excludes the cycles where it did nothing.</li>
+			<li><strong>The replay scripts are not in the public repository.</strong> The numbers here are transcribed from the run's summary output; the method is described above so it can be repeated, but this page is currently the only published record of it.</li>
+		</ul>
+	</section>
+
+	<div class="cta-box">
+		<p>The engine records every prompt and answer, which is what makes this kind of check possible at all.</p>
+		<a href="https://github.com/qrak/LLM_trader" target="_blank" rel="noopener" class="btn btn-primary">Engine source ↗</a>
+		<a href="/articles/measurement/" class="btn btn-secondary">How the numbers are produced →</a>
+	</div>
+
+	<div class="disclaimer-box">
+		<strong>Risk notice:</strong> This is an experimental open-source project, not financial advice. It trades simulated capital by default; results are not live trading results. Trading crypto carries substantial risk. See the <a href="/disclaimer/">full risk disclaimer</a>.
+	</div>
+
+	<style>
+		.data {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 1rem 0 1.5rem;
+			font-size: 0.95rem;
+		}
+
+		.data th {
+			text-align: left;
+			font-weight: 600;
+			color: var(--text-muted);
+			padding: 0.5rem 0.75rem 0.5rem 0;
+			border-bottom: 1px solid var(--border-color);
+			white-space: nowrap;
+		}
+
+		.data td {
+			padding: 0.5rem 0.75rem 0.5rem 0;
+			color: #d1d5db;
+			border-bottom: 1px solid var(--border-color);
+			vertical-align: top;
+		}
+	</style>
+</ArticleLayout>

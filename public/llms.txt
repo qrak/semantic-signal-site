@@ -23,19 +23,22 @@ Key facts, all verifiable in the repository:
 
 ## Pages
 
-- [Home](https://qrak.org/): what the system is, how it differs from Freqtrade / TradingAgents / Vibe-Trading, and where every number comes from
+- [Home](https://qrak.org/): what the system is, the honest status of the live path, and where every number comes from
 - [Full story & technology](https://qrak.org/story/): the development history with real commit dates, the mathematics of the gates, an honest status section, and an errata list of claims this site used to make
-- [Articles](https://qrak.org/articles/): technical write-ups
-- [How the bot reads charts](https://qrak.org/articles/chart-vision/): candles → indicators → chart image → prompt-level expected value, and which checks are deterministic
-- [Vector memory](https://qrak.org/articles/vector-memory/): how closed trades become retrievable lessons
-- [From paper to a live executor](https://qrak.org/articles/executor-separation/): the seven pre-execution checks, the verdict journal, and what is still missing before real capital
-- [About the developer](https://qrak.org/about/): background, repositories, how the project is maintained
+- [Articles](https://qrak.org/articles/): technical notes
+- [One analysis cycle, step by step](https://qrak.org/articles/chart-vision/): market data, indicators, the chart image, the model call, and the checks that run outside the prompt
+- [Trade memory](https://qrak.org/articles/vector-memory/): what is stored, what is retrieved before each decision, and why a dozen trades still count as anecdotes
+- [Order execution as a separate service](https://qrak.org/articles/executor-separation/): the seven pre-execution checks, the verdict journal, and what is still missing before real capital
+- [Where the numbers come from](https://qrak.org/articles/measurement/): the paper ledger, inference cost and the buy-and-hold comparison, with the gaps that keep them from being evidence
+- [Replaying 55 historical setups](https://qrak.org/articles/offline-replay/): recorded cycles replayed through two prompt versions and two model generations
+- [About the author](https://qrak.org/about/): background, repositories, how the project is maintained
 - [Contact](https://qrak.org/contact/): contact@qrak.org
 - [Risk disclaimer](https://qrak.org/disclaimer/) and [privacy policy](https://qrak.org/privacy-policy/)
 
 ## Source code
 
-- [qrak/LLM_trader](https://github.com/qrak/LLM_trader): the engine, dashboard, indicator library, and this website (`website/`)
+- [qrak/LLM_trader](https://github.com/qrak/LLM_trader): the engine, dashboard and indicator library
+- [qrak/semantic-signal-site](https://github.com/qrak/semantic-signal-site): this website
 - [qrak/ti_numba](https://github.com/qrak/ti_numba): the Numba technical-indicator library this work is based on
 - [qrak/DiscordCryptoAnalyzer](https://github.com/qrak/DiscordCryptoAnalyzer): the earlier Discord bot, predecessor to the current project
 - Live dashboard: https://semanticsignal.qrak.org

@@ -1,0 +1,119 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+---
+
+<ArticleLayout
+	title="Where the Numbers Come From — Semantic Signal"
+	description="The paper ledger behind every performance figure on this site: the window, the 12 trades, inference cost, the buy-and-hold comparison, and the gaps that keep it from being evidence."
+	meta="Article · published October 2026"
+>
+	<span slot="title">Where the numbers come from</span>
+	<p slot="subtitle" class="subtitle">The before/after of every performance figure on this site, and the caveats that belong next to it.</p>
+
+	<section class="section">
+		<h2>The rule</h2>
+		<p>No number on this site is typed by hand. The tables below are printed by one script from the bot's own runtime files plus a single public price request:</p>
+		<pre><code>python scripts/results_report.py</code></pre>
+		<p>Inputs: <code>data/trading/statistics.json</code>, <code>data/trading/api_costs.json</code>, <code>data/trading/trade_history.db</code>, <code>data/trading/metrics/cycles.jsonl</code>, and one Binance klines request for the benchmark. When the ledger changes, the site changes with it — including the numbers that look worse.</p>
+	</section>
+
+	<section class="section">
+		<h2>The window</h2>
+		<table class="facts">
+			<tr><th>Ledger window</th><td>2026-09-20 → 2026-10-26 (36 days)</td></tr>
+			<tr><th>Instrument</th><td>BTC/USDC, 4-hour candles</td></tr>
+			<tr><th>Mode</th><td>Paper book, 10,000 USDC simulated; decisions forwarded to a testnet executor</td></tr>
+			<tr><th>Closed trades</th><td>12 rows (2 excluded from statistics, see below)</td></tr>
+			<tr><th>Analysis cycles</th><td>48 recorded (2026-10-19 → 2026-10-26)</td></tr>
+		</table>
+	</section>
+
+	<section class="section">
+		<h2>The ledger</h2>
+		<table class="facts">
+			<tr><th>Closed trades</th><td>12 rows</td></tr>
+			<tr><th>Winners / losers</th><td>5 / 5</td></tr>
+			<tr><th>Win rate</th><td>41.67% (5 / 12)</td></tr>
+			<tr><th>P&amp;L</th><td>+0.14% (+13.95 USDC on 10,000)</td></tr>
+			<tr><th>Profit factor</th><td>1.41</td></tr>
+			<tr><th>Sharpe / Sortino</th><td>0.19 / 0.36</td></tr>
+			<tr><th>Max drawdown</th><td>−0.25%</td></tr>
+			<tr><th>Best / worst trade</th><td>+4.06% / −2.60%</td></tr>
+		</table>
+		<p>Two of the twelve rows are excluded from statistics and from the brain's learning: their sandbox exits printed below the real market low in the same minute, which is a fill divergence, not a market move. They stay in execution history. The 41.67% win rate uses the full row count as its denominator (5 / 12), which is conservative: the excluded rows cannot count as wins.</p>
+	</section>
+
+	<section class="section">
+		<h2>Inference cost</h2>
+		<table class="facts">
+			<tr><th>Total</th><td>$6.00</td></tr>
+			<tr><th>Google (chart vision)</th><td>$3.88</td></tr>
+			<tr><th>DeepSeek (official API)</th><td>$2.12</td></tr>
+			<tr><th>Input / output tokens</th><td>8,073,341 / 3,834,551</td></tr>
+			<tr><th>Net after inference</th><td>+$7.95</td></tr>
+		</table>
+		<p>Costs are the provider rate-table estimates the bot records while running (<code>config/model_pricing.json</code>, <code>config/peak_rates.json</code>), not invoice reconciliation. Per cycle, across the 48 recorded cycles: mean <strong>$0.0121</strong>, median latency <strong>266 s</strong>.</p>
+		<p>Inference cost is not a footnote here: the expected-value rule that the model is given reads from the same trade history, and $6.00 of model usage against $13.95 of gross paper profit is most of the result.</p>
+	</section>
+
+	<section class="section">
+		<h2>The benchmark</h2>
+		<table class="facts">
+			<tr><th>BTC/USDC in the window</th><td>81,245.48 → 79,758.34</td></tr>
+			<tr><th>Buy and hold, same window</th><td>−1.83%</td></tr>
+			<tr><th>Bot, paper ledger</th><td>+0.14%</td></tr>
+		</table>
+		<p>The difference is about two percentage points over five weeks. It is the kind of gap that a single trade, a fee assumption or a different start date can erase, and it is why the comparison is stated with its window and never as a result.</p>
+	</section>
+
+	<section class="section">
+		<h2>The gaps</h2>
+		<ul>
+			<li><strong>Twelve trades cannot separate skill from noise.</strong> Any statistic here has an error bar wider than its value.</li>
+			<li><strong>Fees are recorded as zero.</strong> The paper book stores <code>fee = 0.0</code> on every row. A 0.15% round trip on each of the 12 trades (at roughly 8% of capital per position, about $1.20 per trade) would remove most of the +$13.95 gain. The ledger is gross of trading costs.</li>
+			<li><strong>Simulated fills.</strong> Paper exits are modelled, not matched. The two excluded rows are a small demonstration of how far a sandbox fill can be from the real market.</li>
+			<li><strong>One instrument, one exchange, one month.</strong> No cross-sectional test, no regime test, no out-of-sample period.</li>
+			<li><strong>Costs are estimates.</strong> Provider rate tables, not invoices.</li>
+		</ul>
+	</section>
+
+	<section class="section">
+		<h2>What this does not prove</h2>
+		<p>It shows that the pipeline runs, records its own decisions and can be re-derived from files. It does not show that the system is profitable, that the strategy generalises, or that the same numbers would survive fees and live liquidity. The page is here so the numbers can be checked and attacked, not so they can be quoted as a track record.</p>
+	</section>
+
+	<div class="cta-box">
+		<p>The same ledger, with the trade-by-trade table, is on the results page.</p>
+		<a href="/results/" class="btn btn-primary">Results page</a>
+		<a href="https://github.com/qrak/LLM_trader/blob/master/docs/RESULTS.md" target="_blank" rel="noopener" class="btn btn-secondary">RESULTS.md ↗</a>
+	</div>
+
+	<div class="disclaimer-box">
+		<strong>Risk notice:</strong> This is an experimental open-source project, not financial advice. It trades simulated capital; nothing here is a live track record. Trading crypto carries substantial risk. See the <a href="/disclaimer/">full risk disclaimer</a>.
+	</div>
+
+	<style>
+		.facts {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 0 0 1.25rem;
+			font-size: 0.98rem;
+		}
+
+		.facts th {
+			text-align: left;
+			font-weight: 600;
+			color: var(--text-muted);
+			padding: 0.45rem 0.75rem 0.45rem 0;
+			white-space: nowrap;
+			vertical-align: top;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.facts td {
+			padding: 0.45rem 0;
+			color: #d1d5db;
+			border-bottom: 1px solid var(--border-color);
+		}
+	</style>
+</ArticleLayout>
