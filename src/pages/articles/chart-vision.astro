@@ -4,15 +4,15 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 <ArticleLayout
 	title="One Analysis Cycle, Step by Step — Semantic Signal"
-	description="What the engine does every four hours: CCXT market data, 79 Numba-compiled indicators, a 1920x1080 chart for a multimodal model, and the checks that run outside the prompt."
+	description="What the engine does on each closed candle (4h on the public deployment): CCXT market data, 79 Numba-compiled indicators, a 1920x1080 chart for a multimodal model, and the checks that run outside the prompt."
 	meta="Article · first published August 2026 · updated October 2026"
 >
 	<span slot="title">One analysis cycle, step by step</span>
-	<p slot="subtitle" class="subtitle">What happens between two four-hour candles, in the order it happens — and which parts of the decision the code enforces rather than the prompt.</p>
+	<p slot="subtitle" class="subtitle">What happens between two closed candles, in the order it happens — and which parts of the decision the code enforces rather than the prompt.</p>
 
 	<section class="section">
 		<h2>Timing</h2>
-		<p>The engine runs one cycle per four-hour candle. In the 48 cycles recorded between 2026-10-19 and 2026-10-26 the median cycle took <strong>266 seconds</strong> and cost <strong>$0.0121</strong> in model usage — almost all of it spent waiting on the multimodal model, not on the local work. That is a small, single-instrument window, and it is the only latency figure this site quotes.</p>
+		<p>The engine runs one cycle per closed candle; the public deployment uses 4h candles. In the 48 cycles recorded between 2026-10-19 and 2026-10-26 the median cycle took <strong>266 seconds</strong> and cost <strong>$0.0121</strong> in model usage — almost all of it spent waiting on the multimodal model, not on the local work. That is a small, single-instrument window, and it is the only latency figure this site quotes.</p>
 		<p>The order of stages is fixed:</p>
 		<ol>
 			<li>fetch market data and account state;</li>

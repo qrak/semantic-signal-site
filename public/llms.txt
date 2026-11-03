@@ -1,25 +1,24 @@
 # Semantic Signal — qrak.org
 
-> An open-source LLM trading agent built by @qrak in Wrocław,
-> Poland. It renders a 1920×1080 candlestick chart for a multimodal model,
-> keeps a 768-dimensional vector memory of its own closed trades, and keeps
-> deterministic pre-execution checks (symbol whitelist, position-size cap, validated
-> stop/target levels) between the model's opinion and any order.
+> An open-source LLM trading agent maintained by @qrak. Once per closed candle it renders a
+> 1920×1080 candlestick chart for a multimodal model, keeps a 768-dimensional vector memory of its own
+> closed trades, and runs deterministic checks (symbol guard, position-size cap, validated stop/target
+> levels) between the model's output and any paper trade.
 > It trades simulated capital by default; a separate executor service runs
 > against an exchange testnet. Profitability is unproven and the site says so.
 
 Key facts, all verifiable in the repository:
 
 - Language / runtime: Python 3.13 (bot), Astro (this site)
-- Test suite: 2,653 tests collected, all passing, none skipped, none failing — `python -m pytest tests -q` (measured 2026-10-27 at commit `8664fa4`, 160 s, the 34 `integration`-marked Playwright tests included)
+- Test suite: 2,786 tests collected, all passing, none skipped, none failing — `python -m pytest tests -q` (measured 2026-11-01, 161 s, the 34 `integration`-marked Playwright tests included)
 - 79 Numba-compiled indicator functions in `src/indicators/` (125 across `src/`)
 - Data per cycle: 999 candles, 50-level order book, funding rate, 24h volume, 500 recent trades
-- Chart image sent to the model: 1920×1080 PNG (Plotly + Kaleido)
+- Chart image sent to the model: 1920×1080 PNG (Plotly + Kaleido); chart export can fail, and the cycle then continues text-only
 - Vector memory: ChromaDB with `BAAI/bge-base-en-v1.5` embeddings (768 dimensions)
-- Retrieval before each decision: 3 nearest past trades, 20-trade statistics, 5 recent rejections, 3 learned rules
-- Entry gate: expected value computed from the bot's own closed trades (the old fixed 1.5 R/R floor was removed; `min_rr_entry = 0.0`)
+- Retrieval before each decision: 3 nearest past trades, win rate over the 20 nearest, up to 5 recent blocked trades, up to 3 learned rules (matching the regime), up to 5 post-mortems
+- Entry gate: an R/R floor that is 0.0 by default (`min_rr_entry`) and can only be raised by the brain's learned threshold; the EV rule is written into the prompt, computed from the bot's own closed trades
 - Trading mode: simulated capital (10,000 USDC paper book). The executor runs with `ENABLE_TESTNET=true` — sandbox only, no real funds
-- Development: 530 commits (2026-10-27), first commit 2025-12-21
+- Development: 562 commits on master (2026-11-03), first commit 2025-12-21
 
 ## Pages
 

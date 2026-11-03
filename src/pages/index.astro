@@ -1,10 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// Verified against the repo on 2026-10-27 at HEAD 8664fa4:
-//   python -m pytest tests -q  ->  2653 passed, 0 skipped, 0 failed (2653 collected, 160 s)
+// Verified against the repo on 2026-11-01 (working tree at 1bd8e03):
+//   python -m pytest tests -q  ->  2781 collected, 2747 run without the browser marker, 0 skipped
 // Keep these in sync with the code before every deploy.
-const TESTS_TOTAL = '2,653';
+const TESTS_TOTAL = '2,786';
 ---
 
 <Layout
@@ -13,11 +13,11 @@ const TESTS_TOTAL = '2,653';
 >
 	<section class="hero">
 		<div class="badge">Open source • Python 3.13 • simulated capital by default</div>
-		<h1>An LLM trading agent that reads candlestick charts and learns from its own closed trades.</h1>
+		<h1>An LLM trading agent that reads candlestick charts and keeps memory of its closed trades.</h1>
 		<p class="hero-sub">
-			Every four hours it renders a 1920×1080 chart, sends it to a multimodal model with 79
-			indicators, the news context and its trade memory, and runs the answer through deterministic
-			risk checks before booking a paper trade.
+			Once per closed candle (4h on the public deployment) it renders a 1920×1080 chart, sends it to a
+			multimodal model with 79 indicators, the news context and its trade memory, then checks the answer
+			with deterministic rules before a paper trade is booked.
 		</p>
 		<div class="cta-buttons">
 			<a href="/results/" class="btn btn-primary">Results</a>
@@ -29,8 +29,8 @@ const TESTS_TOTAL = '2,653';
 		<dl class="status">
 			<div><dt>trading</dt><dd>simulated capital (paper)</dd></div>
 			<div><dt>executor</dt><dd>exchange testnet, no real funds</dd></div>
-			<div><dt>tests</dt><dd>{TESTS_TOTAL}, ~162 s, ruff and pyright clean</dd></div>
-			<div><dt>providers</dt><dd>DeepSeek, Google, OpenRouter, LM Studio</dd></div>
+			<div><dt>tests</dt><dd>{TESTS_TOTAL}, ~161 s full suite, ruff and pyright clean</dd></div>
+			<div><dt>providers</dt><dd>DeepSeek (live), Google, OpenRouter, LM Studio</dd></div>
 		</dl>
 	</section>
 
@@ -38,24 +38,24 @@ const TESTS_TOTAL = '2,653';
 		<div class="card">
 			<div class="card-tag">chart_vision</div>
 			<h3>Chart images, not only indicator values</h3>
-			<p>A 1920×1080 Plotly candlestick chart with SMA, RSI, CMF and OBV goes to the model with the
-			numeric stack. It reads wick geometry and volume from the picture, and every number it cites is
-			checked against the computed value.</p>
+			<p>A 1920×1080 Plotly candlestick chart with SMA, RSI, CMF and OBV panels goes to the model with the
+			numeric stack. Trend strength and pattern quality claims are checked against computed values;
+			the model's reading of the picture itself is not verified.</p>
 		</div>
 
 		<div class="card">
 			<div class="card-tag">vector_memory</div>
 			<h3>Memory of closed trades</h3>
-			<p>Closed trades are embedded with <code>BAAI/bge-base-en-v1.5</code> into ChromaDB. Before each
-			decision the bot retrieves the three most similar past setups, each carrying a surprise ratio so
-			a lucky win does not become a rule.</p>
+			<p>Closed trades are embedded with <code>BAAI/bge-base-en-v1.5</code> (768 dimensions) into ChromaDB.
+			Before each decision the bot retrieves the three most similar past trades. Each closed trade gets a
+			surprise ratio, and rules carry it, so a lucky outcome is annotated rather than treated as a rule.</p>
 		</div>
 
 		<div class="card">
 			<div class="card-tag">risk_governance</div>
 			<h3>Deterministic limits around the model</h3>
-			<p>The model proposes a trade; symbol restrictions, position caps and stop/target validation stay
-			deterministic. Sizing is capped and uses fixed fallback profiles.</p>
+			<p>The model proposes a trade; the symbol guard, the position cap and stop/target validation are
+			deterministic. When the model gives no size, a fallback from the config is used (1–3%, by confidence).</p>
 		</div>
 
 		<div class="card">
@@ -70,8 +70,8 @@ const TESTS_TOTAL = '2,653';
 	<section class="story-preview">
 		<h2>Development history</h2>
 		<p>
-			Built in the evenings after warehouse shifts in Wrocław. The repository holds {TESTS_TOTAL} tests,
-			an AGENTS.md per package, and an executor that runs against an exchange testnet.
+			Built by one developer in the evenings. The repository holds {TESTS_TOTAL} collected tests, an
+			AGENTS.md per package under src/, and a separate executor service that runs against an exchange testnet.
 		</p>
 		<a href="/story/" class="read-more-link">Read the full history →</a>
 	</section>
@@ -101,8 +101,8 @@ const TESTS_TOTAL = '2,653';
 market data, 50 lvls     config/config.ini · src/analyzer/data_fetcher.py
 trade memory 768D        src/trading/vector_memory.py (BAAI/bge-base-en-v1.5)
 risk limits, pre-entry   src/trading/position_management.py
-agent docs, 9 files    AGENTS.md + one per package (src/trading, src/analyzer, ...)
-tests {TESTS_TOTAL}            python -m pytest tests -q   -&gt; all passing, 0 skipped</code></pre>
+agent docs            AGENTS.md + one per package under src/ (src/trading, src/analyzer, ...)
+tests {TESTS_TOTAL}            python -m pytest tests -q   -&gt; all passing, 0 skipped, ~161 s</code></pre>
 	</section>
 
 	<section class="risk-disclaimer">

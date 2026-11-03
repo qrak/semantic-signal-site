@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "astro dev",
-        "build": "astro build && node scripts/build-llms-full.mjs",
+        "build": "node scripts/check-claims.mjs && astro build && node scripts/build-llms-full.mjs",
         "build:site": "astro build",
         "preview": "astro preview"
     },
