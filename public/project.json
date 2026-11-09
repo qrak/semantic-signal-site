@@ -1,7 +1,7 @@
 {
   "schema": "https://qrak.org/project.schema.json",
   "version": 1,
-  "generated": "2026-11-01",
+  "generated": "2026-11-09",
   "purpose": "Machine-readable factual summary of qrak.org and the project it documents, so that AI tools and crawlers do not have to infer facts from marketing copy. Every number here is reproducible from the repository.",
   "site": {
     "name": "Semantic Signal",
@@ -80,14 +80,14 @@
     },
     "llm_providers": ["Google AI", "DeepSeek", "OpenRouter", "BlockRun", "local (LM Studio)"],
     "tests": {
-      "collected": 2786,
-      "passing": 2786,
+      "collected": 2831,
+      "passing": 2831,
       "skipped": 0,
       "failing": 0,
       "command": "python -m pytest tests -q",
-      "measured": "2026-11-01",
-      "measured_at_commit": "1bd8e03",
-      "duration_seconds": 160,
+      "measured": "2026-11-09",
+      "measured_at_commit": "cd62ee5",
+      "duration_seconds": 187,
       "failure_note": "none — the full suite, browser tests included, is green after playwright install chromium"
     },
     "status": {
