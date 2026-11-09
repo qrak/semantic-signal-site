@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 // Verified against the repo on 2026-11-09 (working tree at 89a0274):
 //   python -m pytest tests -q  ->  2781 collected, 2747 run without the browser marker, 0 skipped
 // Keep these in sync with the code before every deploy.
-const TESTS_TOTAL = '2,832';
+const TESTS_TOTAL = '2,841';
 ---
 
 <Layout
@@ -29,7 +29,7 @@ const TESTS_TOTAL = '2,832';
 		<dl class="status">
 			<div><dt>trading</dt><dd>simulated capital (paper)</dd></div>
 			<div><dt>executor</dt><dd>exchange testnet, no real funds</dd></div>
-			<div><dt>tests</dt><dd>{TESTS_TOTAL}, ~161 s full suite, ruff and pyright clean</dd></div>
+			<div><dt>tests</dt><dd>{TESTS_TOTAL}, ~156 s full suite, ruff and pyright clean</dd></div>
 			<div><dt>providers</dt><dd>DeepSeek (live), Google, OpenRouter, LM Studio</dd></div>
 		</dl>
 	</section>
@@ -102,7 +102,7 @@ market data, 50 lvls     config/config.ini · src/analyzer/data_fetcher.py
 trade memory 768D        src/trading/vector_memory.py (BAAI/bge-base-en-v1.5)
 risk limits, pre-entry   src/trading/position_management.py
 agent docs            AGENTS.md + one per package under src/ (src/trading, src/analyzer, ...)
-tests {TESTS_TOTAL}            python -m pytest tests -q   -&gt; all passing, 0 skipped, ~161 s</code></pre>
+tests {TESTS_TOTAL}            python -m pytest tests -q   -&gt; all passing, 0 skipped, ~156 s</code></pre>
 	</section>
 
 	<section class="risk-disclaimer">

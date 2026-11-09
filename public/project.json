@@ -46,7 +46,7 @@
     "type": "open-source LLM trading agent",
     "licence_repo": "https://github.com/qrak/LLM_trader",
     "started": "2025-12-21",
-    "commits": 562,
+    "commits": 566,
     "runtime": "Python 3.13",
     "live_dashboard": "https://semanticsignal.qrak.org",
     "capabilities": [
@@ -80,13 +80,13 @@
     },
     "llm_providers": ["Google AI", "DeepSeek", "OpenRouter", "BlockRun", "local (LM Studio)"],
     "tests": {
-      "collected": 2832,
-      "passing": 2832,
+      "collected": 2841,
+      "passing": 2841,
       "skipped": 0,
       "failing": 0,
       "command": "python -m pytest tests -q",
       "measured": "2026-11-09",
-      "measured_at_commit": "89a0274",
+      "measured_at_commit": "f802b5f",
       "duration_seconds": 161,
       "failure_note": "none — the full suite, browser tests included, is green after playwright install chromium"
     },
