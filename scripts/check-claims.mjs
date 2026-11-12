@@ -24,8 +24,10 @@ const commits = claims.repo?.commits;
 if (project.project?.tests?.collected !== collected) {
 	problems.push(`project.json: tests.collected ${project.project?.tests?.collected} != claims ${collected}`);
 }
-if (project.project?.tests?.passing !== collected) {
-	problems.push(`project.json: tests.passing ${project.project?.tests?.passing} != claims ${collected}`);
+if ((project.project?.tests?.passing ?? 0) + (project.project?.tests?.skipped ?? 0) !== collected) {
+	problems.push(
+		`project.json: tests.passing ${project.project?.tests?.passing} + skipped ${project.project?.tests?.skipped} != claims ${collected}`,
+	);
 }
 if (project.project?.commits !== commits) {
 	problems.push(`project.json: commits ${project.project?.commits} != claims ${commits}`);
