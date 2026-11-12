@@ -18,15 +18,15 @@
   "max_drawdown_pct": -0.25,
   "best_trade_pct": 4.06,
   "worst_trade_pct": -2.6,
-  "inference_usd": 7.1156,
-  "tokens_in": 9950171,
-  "tokens_out": 4752047,
-  "net_after_inference_usd": -1.84,
-  "cycles": 146,
-  "cycle_latency_median_s": 275.5,
-  "cycle_cost_usd": 0.0114,
+  "inference_usd": 7.1222,
+  "tokens_in": 9969691,
+  "tokens_out": 4756372,
+  "net_after_inference_usd": -1.85,
+  "cycles": 147,
+  "cycle_latency_median_s": 275.0,
+  "cycle_cost_usd": 0.0113,
   "signals": {
-    "HOLD": 131,
+    "HOLD": 132,
     "SELL": 7,
     "UPDATE": 5,
     "BUY": 2,
@@ -38,8 +38,6 @@
   "benchmark_bars": 312,
   "benchmark_error": null,
   "snapshot_at": "2026-11-12",
-  "winners": 6,
-  "losers": 8,
   "trades": [
     {
       "when": "2026-09-24",
@@ -131,5 +129,7 @@
       "pnl_pct": -1.1374689877049995,
       "reason": "closed"
     }
-  ]
+  ],
+  "winners": 6,
+  "losers": 8
 }
