@@ -1,7 +1,7 @@
 {
   "schema": "https://qrak.org/project.schema.json",
   "version": 1,
-  "generated": "2026-11-09",
+  "generated": "2026-11-12",
   "purpose": "Machine-readable factual summary of qrak.org and the project it documents, so that AI tools and crawlers do not have to infer facts from marketing copy. Every number here is reproducible from the repository.",
   "site": {
     "name": "Semantic Signal",
@@ -46,7 +46,7 @@
     "type": "open-source LLM trading agent",
     "licence_repo": "https://github.com/qrak/LLM_trader",
     "started": "2025-12-21",
-    "commits": 566,
+    "commits": 607,
     "runtime": "Python 3.13",
     "live_dashboard": "https://semanticsignal.qrak.org",
     "capabilities": [
@@ -61,7 +61,7 @@
     "stack": [
       "Python 3.13",
       "FastAPI",
-      "NumPy + Numba (79 compiled indicator functions in src/indicators/)",
+      "NumPy + Numba (65 compiled indicator functions in src/indicators/)",
       "ChromaDB + sentence-transformers (BAAI/bge-base-en-v1.5)",
       "CCXT",
       "Plotly + Kaleido",
@@ -80,14 +80,14 @@
     },
     "llm_providers": ["Google AI", "DeepSeek", "OpenRouter", "BlockRun", "local (LM Studio)"],
     "tests": {
-      "collected": 2841,
-      "passing": 2841,
+      "collected": 2728,
+      "passing": 2728,
       "skipped": 0,
       "failing": 0,
       "command": "python -m pytest tests -q",
-      "measured": "2026-11-09",
-      "measured_at_commit": "f802b5f",
-      "duration_seconds": 161,
+      "measured": "2026-11-12",
+      "measured_at_commit": "ca9e5e5",
+      "duration_seconds": 135,
       "failure_note": "none — the full suite, browser tests included, is green after playwright install chromium"
     },
     "status": {

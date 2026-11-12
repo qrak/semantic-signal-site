@@ -14,7 +14,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 		<h2>The rule</h2>
 		<p>No number on this site is typed by hand. The tables below are printed by one script from the bot's own runtime files plus a single public price request:</p>
 		<pre><code>python scripts/results_report.py</code></pre>
-		<p>Inputs: <code>data/trading/statistics.json</code>, <code>data/trading/api_costs.json</code>, <code>data/trading/trade_history.db</code>, <code>data/trading/metrics/cycles.jsonl</code>, and one Binance klines request for the benchmark. When the ledger changes, the site changes with it — including the numbers that look worse. The figures on this page are the output of a run on <strong>2026-11-01</strong>; the cost totals grow with every cycle, so the live dashboard is the place to read them.</p>
+		<p>Inputs: <code>data/trading/statistics.json</code>, <code>data/trading/api_costs.json</code>, <code>data/trading/trade_history.db</code>, <code>data/trading/metrics/cycles.jsonl</code>, and one Binance klines request for the benchmark. The current figures, regenerated from a frozen ledger snapshot, are on the <a href="/results">results page</a>; this page keeps the output of a run on <strong>2026-11-01</strong>, including the numbers that looked worse, and the cost totals grow with every cycle after it.</p>
 	</section>
 
 	<section class="section">

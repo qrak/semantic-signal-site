@@ -4,7 +4,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 <ArticleLayout
 	title="One Analysis Cycle, Step by Step — Semantic Signal"
-	description="What the engine does on each closed candle (4h on the public deployment): CCXT market data, 79 Numba-compiled indicators, a 1920x1080 chart for a multimodal model, and the checks that run outside the prompt."
+	description="What the engine does on each closed candle (4h on the public deployment): CCXT market data, 65 Numba-compiled indicators, a 1920x1080 chart for a multimodal model, and the checks that run outside the prompt."
 	meta="Article · first published August 2026 · updated October 2026"
 >
 	<span slot="title">One analysis cycle, step by step</span>
@@ -34,7 +34,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 	<section class="section">
 		<h2>2. Indicators</h2>
-		<p><code>src/indicators/</code> holds <strong>79 functions compiled with Numba</strong> (<code>@njit(cache=True)</code>) — EMA, ADX, Supertrend, Ichimoku, Parabolic SAR, CMF, OBV, RSI, support/resistance and volatility work. The same functions appear 116 times across <code>src/</code>, and there are no external technical-analysis dependencies.</p>
+		<p><code>src/indicators/</code> holds <strong>65 functions compiled with Numba</strong> (<code>@njit(cache=True)</code>) — EMA, ADX, Supertrend, Ichimoku, Parabolic SAR, CMF, OBV, RSI, support/resistance and volatility work. The same functions appear 116 times across <code>src/</code>, and there are no external technical-analysis dependencies.</p>
 		<p>Two reasons for that choice: the numbers are computed deterministically and can be re-checked line by line, and a model's numeric claims can be compared against values the engine already has. Indicator values describe the past; the entry decision does not follow from any single threshold.</p>
 	</section>
 

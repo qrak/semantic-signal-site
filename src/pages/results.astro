@@ -1,55 +1,87 @@
 ---
 import ArticleLayout from '../layouts/ArticleLayout.astro';
+import ledger from '../data/ledger.json';
 
-const WINDOW = '20 September – 31 October 2026';
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const parts = (iso: string) => {
+	const [year, month, day] = iso.split('-').map(Number);
+	return { year, month, day };
+};
+const longDate = (iso: string) => {
+	const { year, month, day } = parts(iso);
+	return `${day} ${MONTHS[month - 1]} ${year}`;
+};
+const shortDate = (iso: string) => {
+	const { month, day } = parts(iso);
+	return `${String(day).padStart(2, '0')} ${SHORT_MONTHS[month - 1]}`;
+};
+
+const WINDOW = (() => {
+	const start = parts(ledger.window_start);
+	const end = parts(ledger.window_end);
+	const head = `${start.day} ${MONTHS[start.month - 1]}`;
+	if (start.year === end.year) {
+		return `${head} – ${end.day} ${MONTHS[end.month - 1]} ${end.year}`;
+	}
+	return `${head} ${start.year} – ${end.day} ${MONTHS[end.month - 1]} ${end.year}`;
+})();
+
+const signed = (value: number, unit: string) =>
+	`${value >= 0 ? '+' : '−'}${Math.abs(value).toFixed(2)}${unit}`;
+const pct = (value: number) => signed(value, '%');
+const usd = (value: number) => `${value >= 0 ? '+' : '−'}$${Math.abs(value).toFixed(2)}`;
+const millions = (value: number) => `${(value / 10 ** 6).toFixed(1)}M`;
+const price = (value: number) =>
+	value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replaceAll(',', ' ');
+
+const bot = ledger.return_pct;
+const hold = ledger.benchmark_pct;
+const gap = (bot - hold).toFixed(1);
+
 const ROWS = [
-	['Closed trades', '14 (12 counted, 2 excluded)'],
-	['Winners / losers', '6 / 6'],
-	['Win rate', '42.9%'],
-	['Return', '+0.16% (+$15.72)'],
-	['Profit factor', '1.40'],
-	['Sharpe / Sortino', '0.21 / 0.40'],
-	['Max drawdown', '−0.25%'],
-	['Best / worst trade', '+4.06% / −2.60%'],
-	['Inference cost', '$6.44 (8.8M in / 4.2M out tokens)'],
-	['Net after inference', '+$9.28'],
-	['Analyses', '83 cycles · median 277 s · $0.0125 each'],
+	['Closed trades', `${ledger.closed_trades} (${ledger.counted_trades} counted, ${ledger.excluded_trades} excluded)`],
+	['Winners / losers', `${ledger.winners} / ${ledger.losers}`],
+	['Win rate', `${ledger.win_rate_pct}%`],
+	['Return', `${pct(bot)} (${usd(ledger.return_usd)})`],
+	['Profit factor', ledger.profit_factor.toFixed(2)],
+	['Sharpe / Sortino', `${ledger.sharpe.toFixed(2)} / ${ledger.sortino.toFixed(2)}`],
+	['Max drawdown', pct(ledger.max_drawdown_pct)],
+	['Best / worst trade', `${pct(ledger.best_trade_pct)} / ${pct(ledger.worst_trade_pct)}`],
+	['Inference cost', `$${ledger.inference_usd.toFixed(2)} (${millions(ledger.tokens_in)} in / ${millions(ledger.tokens_out)} out tokens)`],
+	['Net after inference', usd(ledger.net_after_inference_usd)],
+	['Analyses', `${ledger.cycles} cycles · median ${Math.round(ledger.cycle_latency_median_s)} s · $${ledger.cycle_cost_usd.toFixed(4)} each`],
 ];
-const TRADES = [
-	['24 Sep', 'LONG', '−2.60%', 'closed'],
-	['24 Sep', 'LONG', '−2.06%', 'stop loss'],
-	['28 Sep', 'LONG', '−0.28%', 'closed'],
-	['02 Oct', 'LONG', '−0.99%', 'closed'],
-	['05 Oct', 'LONG', '−1.12%', 'stop loss'],
-	['10 Oct', 'SHORT', '+3.45%', 'take profit'],
-	['12 Oct', 'SHORT', '+2.04%', 'take profit'],
-	['14 Oct', 'SHORT', '+0.07%', 'stop loss'],
-	['15 Oct', 'SHORT', '—', 'excluded (fill divergence)'],
-	['17 Oct', 'SHORT', '—', 'excluded (fill divergence)'],
-	['26 Oct', 'SHORT', '+1.93%', 'take profit'],
-	['29 Oct', 'SHORT', '+2.25%', 'closed'],
-	['30 Oct', 'LONG', '−1.11%', 'closed'],
-];
+
+const TRADES = ledger.trades.map((trade) => [
+	shortDate(trade.when),
+	trade.direction,
+	trade.pnl_pct === null ? '—' : pct(Number(trade.pnl_pct)),
+	trade.reason,
+]);
 ---
 
 <ArticleLayout
 	title="Results — paper trading ledger | Semantic Signal"
-	description="Paper-trading ledger for Semantic Signal: 14 closed BTC/USDC trades (12 counted), +0.16% against a −4.64% buy-and-hold, $6.44 of inference cost, and every caveat that belongs with those numbers."
+	description={`Paper-trading ledger for Semantic Signal: ${ledger.closed_trades} closed BTC/USDC trades (${ledger.counted_trades} counted), ${pct(bot)} against a ${pct(hold)} buy-and-hold, $${ledger.inference_usd.toFixed(2)} of inference cost, and every caveat that belongs with those numbers.`}
 	meta="Results"
 >
 	<span slot="title">Results, as the bot recorded them</span>
 	<p slot="subtitle" class="subtitle">
-		{WINDOW} · BTC/USDC · 4h candles · 10 000 USDC simulated capital · paper book with a testnet executor.
+		{WINDOW} · BTC/USDC · 4h candles · {ledger.capital_usdc.toLocaleString('en-US')} USDC simulated capital · paper book with a testnet executor.
 	</p>
 
 	<section class="section">
 		<h2>The ledger</h2>
 		<p>
-			Every number on this page is read from the bot's own runtime files (<code>statistics.json</code>,
-			<code>api_costs.json</code>, <code>trade_history.db</code>, <code>metrics/cycles.jsonl</code>) plus one
-			public Binance klines request for the benchmark. Nothing is typed from memory:
-			<code>python scripts/results_report.py</code> prints it, and the
-			<a href="https://github.com/qrak/LLM_trader#results" target="_blank" rel="noopener">README results table</a>
+			Every number on this page is rendered from one frozen copy of the bot's runtime files
+			(<code>statistics.json</code>, <code>api_costs.json</code>, <code>trade_history.db</code>,
+			<code>metrics/cycles.jsonl</code>) plus one public Binance klines request for the benchmark. Nothing is
+			typed from memory: <code>python scripts/results_report.py --data-dir results/{ledger.snapshot_at}</code>
+			prints it, the ledger itself is committed at
+			<a href="https://github.com/qrak/LLM_trader/tree/master/results" target="_blank" rel="noopener">results/</a>,
+			and the <a href="https://github.com/qrak/LLM_trader#results" target="_blank" rel="noopener">README results table</a>
 			quotes the same window.
 		</p>
 
@@ -65,21 +97,20 @@ const TRADES = [
 	<section class="section">
 		<h2>Versus holding the coin</h2>
 		<p>
-			Over the same 42 days the underlying went from <strong>81 245.48</strong> to
-			<strong>77 473.56</strong> — a <strong>−4.64%</strong> buy-and-hold (only closed 4h bars).
-			The bot finished <strong>+0.16%</strong>.
+			Over the same {ledger.window_days} days the underlying went from <strong>{price(ledger.benchmark_start)}</strong> to
+			<strong>{price(ledger.benchmark_end)}</strong> — a <strong>{pct(hold)}</strong> buy-and-hold (only closed 4h bars).
+			The bot finished <strong>{pct(bot)}</strong>.
 		</p>
 		<figure class="chart">
-			<img src="/results-vs-btc.png" width="1200" height="520" alt="Bot +0.16% versus BTC buy-and-hold −4.64% over the same window" loading="lazy" />
-			<figcaption>Same window, same instrument. Four and a half points over six weeks is not an edge.</figcaption>
+			<img src="/results-vs-btc.png" width="1200" height="520" alt={`Bot ${pct(bot)} versus BTC buy-and-hold ${pct(hold)} over the same window`} loading="lazy" />
+			<figcaption>Same window, same instrument. {gap} points over {Math.round(ledger.window_days / 7)} weeks is not an edge.</figcaption>
 		</figure>
 	</section>
 
 	<section class="section">
 		<h2>Closed trades</h2>
 		<p>
-			One row per post-mortem the bot wrote. Thirteen rows cover thirteen of the fourteen closed trades:
-			one was closed without a post-mortem row, so the ledger counts it and this table does not.
+			One row per post-mortem the bot wrote. {TRADES.length} rows cover {TRADES.length} of the {ledger.closed_trades} closed trades: one was closed without a post-mortem row, so the ledger counts it and this table does not.
 		</p>
 		<table class="trades">
 			<thead>
@@ -101,9 +132,9 @@ const TRADES = [
 	<section class="section">
 		<h2>Caveats</h2>
 		<ul>
-			<li><strong>Twelve counted trades cannot separate skill from noise.</strong> The sample is too small to read as a track record.</li>
-			<li><strong>Fees are configured but not booked.</strong> The paper book records <code>fee = 0.0</code> (or no fee at all) on its rows, so the +$15.72 is gross of trading costs; at the configured 0.075% per side it would mostly disappear. See <a href="/articles/measurement/">where the numbers come from</a>.</li>
-			<li><strong>Two trades are excluded on purpose</strong> — both sandbox exits printed below the real market low in the same minute, so they stay in execution history but not in statistics or in the brain's learning.</li>
+			<li><strong>{ledger.counted_trades} counted trades cannot separate skill from noise.</strong> The sample is too small to read as a track record.</li>
+			<li><strong>Fees are configured but not booked.</strong> The paper book records <code>fee = 0.0</code> (or no fee at all) on its rows, so the {usd(ledger.return_usd)} is gross of trading costs; at the configured 0.075% per side it would mostly disappear. See <a href="/articles/measurement/">where the numbers come from</a>.</li>
+			<li><strong>{ledger.excluded_trades} trades are excluded on purpose</strong> — both sandbox exits printed below the real market low in the same minute, so they stay in execution history but not in statistics or in the brain's learning.</li>
 			<li><strong>This is a paper book.</strong> The executor can reach an exchange testnet, not live funds.</li>
 		</ul>
 		<p>
@@ -113,6 +144,8 @@ const TRADES = [
 		</p>
 	</section>
 </ArticleLayout>
+
+
 
 <style>
 	.ledger,

@@ -1,0 +1,135 @@
+{
+  "available": true,
+  "window_start": "2026-09-20",
+  "window_end": "2026-11-10",
+  "window_days": 52,
+  "pair": "BTC/USDC",
+  "timeframe": "4h",
+  "capital_usdc": 10000.0,
+  "closed_trades": 16,
+  "counted_trades": 14,
+  "excluded_trades": 2,
+  "win_rate_pct": 37.5,
+  "return_pct": 0.05,
+  "return_usd": 5.27,
+  "profit_factor": 1.11,
+  "sharpe": 0.11,
+  "sortino": 0.21,
+  "max_drawdown_pct": -0.25,
+  "best_trade_pct": 4.06,
+  "worst_trade_pct": -2.6,
+  "inference_usd": 7.1156,
+  "tokens_in": 9950171,
+  "tokens_out": 4752047,
+  "net_after_inference_usd": -1.84,
+  "cycles": 146,
+  "cycle_latency_median_s": 275.5,
+  "cycle_cost_usd": 0.0114,
+  "signals": {
+    "HOLD": 131,
+    "SELL": 7,
+    "UPDATE": 5,
+    "BUY": 2,
+    "CLOSE": 1
+  },
+  "benchmark_pct": -9.27,
+  "benchmark_start": 81245.48,
+  "benchmark_end": 73717.26,
+  "benchmark_bars": 312,
+  "benchmark_error": null,
+  "snapshot_at": "2026-11-12",
+  "winners": 6,
+  "losers": 8,
+  "trades": [
+    {
+      "when": "2026-09-24",
+      "direction": "LONG",
+      "pnl_pct": -2.5960364992076648,
+      "reason": "closed"
+    },
+    {
+      "when": "2026-09-24",
+      "direction": "LONG",
+      "pnl_pct": -2.060191221262188,
+      "reason": "stop loss"
+    },
+    {
+      "when": "2026-09-28",
+      "direction": "LONG",
+      "pnl_pct": -0.27584261957042366,
+      "reason": "closed"
+    },
+    {
+      "when": "2026-10-02",
+      "direction": "LONG",
+      "pnl_pct": -0.99186915348368,
+      "reason": "closed"
+    },
+    {
+      "when": "2026-10-05",
+      "direction": "LONG",
+      "pnl_pct": -1.124175146897991,
+      "reason": "stop loss"
+    },
+    {
+      "when": "2026-10-10",
+      "direction": "SHORT",
+      "pnl_pct": 3.4515859289570647,
+      "reason": "take profit"
+    },
+    {
+      "when": "2026-10-12",
+      "direction": "SHORT",
+      "pnl_pct": 2.0368568406050027,
+      "reason": "take profit"
+    },
+    {
+      "when": "2026-10-14",
+      "direction": "SHORT",
+      "pnl_pct": 0.07055586863372293,
+      "reason": "stop loss"
+    },
+    {
+      "when": "2026-10-15",
+      "direction": "SHORT",
+      "pnl_pct": null,
+      "reason": "excluded (fill divergence)"
+    },
+    {
+      "when": "2026-10-17",
+      "direction": "SHORT",
+      "pnl_pct": null,
+      "reason": "excluded (fill divergence)"
+    },
+    {
+      "when": "2026-10-26",
+      "direction": "SHORT",
+      "pnl_pct": 1.9335507191250538,
+      "reason": "take profit"
+    },
+    {
+      "when": "2026-10-29",
+      "direction": "SHORT",
+      "pnl_pct": 2.248286498313979,
+      "reason": "closed"
+    },
+    {
+      "when": "2026-10-30",
+      "direction": "LONG",
+      "pnl_pct": -1.1108800826667953,
+      "reason": "closed"
+    },
+    {
+      "when": "2026-11-02",
+      "direction": "SHORT",
+      "pnl_pct": -1.0825623005254845,
+      "reason": "closed"
+    },
+    {
+      "when": "2026-11-04",
+      "direction": "SHORT",
+      "pnl_pct": -1.1374689877049995,
+      "reason": "closed"
+    }
+  ]
+}
