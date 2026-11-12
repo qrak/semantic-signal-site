@@ -1,10 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import claims from '../data/claims.json';
 
-// Verified against the repo on 2026-11-09 (working tree at 89a0274):
-//   python -m pytest tests -q  ->  2781 collected, 2747 run without the browser marker, 0 skipped
-// Keep these in sync with the code before every deploy.
-const TESTS_TOTAL = '2,729';
+const TESTS_TOTAL = claims.tests.collected.toLocaleString('en-US');
 ---
 
 <Layout

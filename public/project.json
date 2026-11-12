@@ -80,8 +80,8 @@
     },
     "llm_providers": ["Google AI", "DeepSeek", "OpenRouter", "BlockRun", "local (LM Studio)"],
     "tests": {
-      "collected": 2729,
-      "passing": 2728,
+      "collected": 2736,
+      "passing": 2735,
       "skipped": 1,
       "failing": 0,
       "command": "python -m pytest tests -q",

@@ -33,24 +33,20 @@ if (project.project?.commits !== commits) {
 	problems.push(`project.json: commits ${project.project?.commits} != claims ${commits}`);
 }
 
-const pages = ['src/pages/index.astro', 'src/pages/story.astro'];
+const pages = ['src/pages/index.astro', 'src/pages/story.astro', 'src/pages/about.astro'];
+const imported = readJson('src/data/claims.json');
+if (imported.tests?.collected !== collected || imported.repo?.commits !== commits) {
+	problems.push('src/data/claims.json is not public/claims.json — copy it again');
+}
 for (const page of pages) {
 	const body = read(page);
-	const match = body.match(/TESTS_TOTAL\s*=\s*'([\d,]+)'/);
-	if (!match) {
-		problems.push(`${page}: no TESTS_TOTAL constant`);
-		continue;
+	if (!body.includes("import claims from '../data/claims.json'")) {
+		problems.push(`${page}: the test count must come from claims.json, not from the page`);
 	}
-	const value = Number(match[1].replaceAll(',', ''));
-	if (value !== collected) {
-		problems.push(`${page}: TESTS_TOTAL ${match[1]} != claims ${collected}`);
+	const hardcoded = body.match(/TESTS_TOTAL\s*=\s*'[\d,]+'/);
+	if (hardcoded) {
+		problems.push(`${page}: ${hardcoded[0]} is a hardcoded count, import claims.json instead`);
 	}
-}
-
-const about = read('src/pages/about.astro');
-const aboutTotal = about.match(/([\d,]{3,})\s+tests/);
-if (aboutTotal && Number(aboutTotal[1].replaceAll(',', '')) !== collected) {
-	problems.push(`about.astro: says ${aboutTotal[1]} tests, claims ${collected}`);
 }
 
 if (problems.length > 0) {
