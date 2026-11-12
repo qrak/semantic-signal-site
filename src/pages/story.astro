@@ -86,7 +86,7 @@ const TESTS_TOTAL = '2,728';
 			<h2>3. The mathematics and the engineering</h2>
 
 			<h3>The Numba JIT indicator engine</h3>
-			<p>Indicators are written in NumPy and decorated with Numba's <code>@njit(cache=True)</code>, so they compile to machine code on first call and cache the result. <code>src/indicators/</code> contains <strong>79 Numba-compiled functions</strong> (125 across the whole <code>src/</code> tree) with zero external technical-analysis dependencies. Real code, not a screenshot:</p>
+			<p>Indicators are written in NumPy and decorated with Numba's <code>@njit(cache=True)</code>, so they compile to machine code on first call and cache the result. <code>src/indicators/</code> contains <strong>65 Numba-compiled functions</strong> (107 across the whole <code>src/</code> tree) with zero external technical-analysis dependencies. Real code, not a screenshot:</p>
 			<pre><code>@njit(cache=True)
 def supertrend_numba(high: np.ndarray, low: np.ndarray, close: np.ndarray,
                      length: int = 10, multiplier: float = 3.0) -&gt; tuple[np.ndarray, np.ndarray]:
