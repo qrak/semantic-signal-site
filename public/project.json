@@ -46,7 +46,7 @@
     "type": "open-source LLM trading agent",
     "licence_repo": "https://github.com/qrak/LLM_trader",
     "started": "2025-12-21",
-    "commits": 631,
+    "commits": 634,
     "runtime": "Python 3.13",
     "live_dashboard": "https://semanticsignal.qrak.org",
     "capabilities": [
@@ -87,14 +87,14 @@
       "BlockRun (only in the all chain)"
     ],
     "tests": {
-      "collected": 2807,
-      "passing": 2806,
+      "collected": 2804,
+      "passing": 2803,
       "skipped": 1,
       "failing": 0,
       "command": "python -m pytest tests -q",
-      "measured": "2026-11-16",
-      "measured_at_commit": "9239e548ddbb1efaa51558e1cf5f963a77eb5024",
-      "duration_seconds": 123,
+      "measured": "2026-11-17",
+      "measured_at_commit": "875f0ebca21cbccad29fc8f21cb2aae57b622285",
+      "duration_seconds": 132,
       "failure_note": "none — one test skips without the optional mcp package; no test opens a browser (Playwright appears only as a chart-export fallback)"
     },
     "status": {
