@@ -1,7 +1,7 @@
 {
   "schema": "https://qrak.org/project.schema.json",
   "version": 1,
-  "generated": "2026-11-12",
+  "generated": "2026-11-16",
   "purpose": "Machine-readable factual summary of qrak.org and the project it documents, so that AI tools and crawlers do not have to infer facts from marketing copy. Every number here is reproducible from the repository.",
   "site": {
     "name": "Semantic Signal",
@@ -46,7 +46,7 @@
     "type": "open-source LLM trading agent",
     "licence_repo": "https://github.com/qrak/LLM_trader",
     "started": "2025-12-21",
-    "commits": 615,
+    "commits": 631,
     "runtime": "Python 3.13",
     "live_dashboard": "https://semanticsignal.qrak.org",
     "capabilities": [
@@ -79,28 +79,29 @@
       "recent_trades_fetched": 500
     },
     "llm_providers": [
+      "OpenCode Go (active provider in the public deployment: deepseek-v4.1-flash)",
       "Google AI",
       "DeepSeek",
+      "local (LM Studio)",
       "OpenRouter",
-      "BlockRun",
-      "local (LM Studio)"
+      "BlockRun (only in the all chain)"
     ],
     "tests": {
-      "collected": 2737,
-      "passing": 2736,
+      "collected": 2807,
+      "passing": 2806,
       "skipped": 1,
       "failing": 0,
       "command": "python -m pytest tests -q",
-      "measured": "2026-11-12",
-      "measured_at_commit": "81291b4379ab19850b6b349f8b65cc7fd988b1cf",
-      "duration_seconds": 132,
-      "failure_note": "none — one test skips without the optional mcp package; the browser tests run after playwright install chromium"
+      "measured": "2026-11-16",
+      "measured_at_commit": "9239e548ddbb1efaa51558e1cf5f963a77eb5024",
+      "duration_seconds": 123,
+      "failure_note": "none — one test skips without the optional mcp package; no test opens a browser (Playwright appears only as a chart-export fallback)"
     },
     "status": {
       "trading_mode": "paper (simulated capital, 10,000 USDC book)",
       "real_money_enabled": false,
       "executor_mode": "exchange testnet / sandbox (ENABLE_TESTNET=true, DRY_RUN=false)",
-      "executor_last_exercised": "2026-08-15",
+      "executor_last_exercised": "2026-11-15",
       "profitability": "unproven",
       "known_weakness": "exchange reconciliation is the least-tested part of the live path"
     },

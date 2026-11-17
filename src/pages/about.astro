@@ -28,8 +28,9 @@ const CLAIMS_TESTS = claims.tests.collected.toLocaleString('en-US');
 	<section class="section">
 		<h2>Repositories</h2>
 		<ul>
-			<li><a href="https://github.com/qrak/LLM_trader" target="_blank" rel="noopener">qrak/LLM_trader</a> — the main project: reasoning engine, Numba indicator library, vector memory, dashboard and this site.</li>
-			<li><a href="https://github.com/qrak/ti_numba" target="_blank" rel="noopener">qrak/ti_numba</a> — the technical indicators, extracted as a standalone library.</li>
+			<li><a href="https://github.com/qrak/LLM_trader" target="_blank" rel="noopener">qrak/LLM_trader</a> — the main project: the reasoning engine, the Numba indicator library, the vector memory and the dashboard.</li>
+			<li><a href="https://github.com/qrak/semantic-signal-site" target="_blank" rel="noopener">qrak/semantic-signal-site</a> — this website, deployed to Cloudflare Pages.</li>
+			<li><a href="https://github.com/qrak/ti_numba" target="_blank" rel="noopener">qrak/ti_numba</a> — a standalone Numba technical-indicator library by the same author.</li>
 			<li><a href="https://github.com/qrak/DiscordCryptoAnalyzer" target="_blank" rel="noopener">qrak/DiscordCryptoAnalyzer</a> — the earlier bot, kept for the history.</li>
 		</ul>
 	</section>
@@ -37,7 +38,7 @@ const CLAIMS_TESTS = claims.tests.collected.toLocaleString('en-US');
 	<section class="section">
 		<h2>How the code is maintained</h2>
 		<ul>
-			<li><strong>{CLAIMS_TESTS} collected tests</strong> (all of them run in CI), ruff and pyright in CI — <code>python -m pytest tests -q -m "not integration"</code>.</li>
+			<li><strong>{CLAIMS_TESTS} collected tests</strong> (the suite runs in CI on every push), ruff and pyright in CI — <code>python -m pytest tests -q -m "not integration"</code>.</li>
 			<li><strong>CHANGELOG.md</strong> records decisions, reversals and mistakes, including a brain-learning reset after a losing streak.</li>
 			<li><strong>AGENTS.md</strong> per package documents the conventions and the verification gates for contributors and coding agents.</li>
 		</ul>

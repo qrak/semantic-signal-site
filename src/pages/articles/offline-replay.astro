@@ -12,14 +12,14 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 	<section class="section">
 		<h2>What was replayed</h2>
-		<p>Every cycle is recorded: the prompt that was sent, the model's answer, the parsed decision and the market context. The replay took <strong>55 recorded setups</strong> — 45 cycles that historically produced an entry (BUY or SELL) and 10 that produced a CLOSE — and sent each one back through the pipeline with a fixed prompt.</p>
+		<p>The bot keeps the prompt and the answer of the most recent cycle, plus one metrics line per cycle; the replay worked from those recorded cycles and their decisions. It took <strong>55 recorded setups</strong> — 45 cycles that historically produced an entry (BUY or SELL) and 10 that produced a CLOSE — and sent each one back through the pipeline with a fixed prompt.</p>
 		<p>Three variants, all on the same replay data:</p>
 		<ul>
 			<li><strong>K</strong> — the prompt version in use before the rewrite, on the model generation of the time;</li>
 			<li><strong>W</strong> — the current prompt, on the same model generation;</li>
 			<li><strong>W36</strong> — the current prompt, on the previous model generation.</li>
 		</ul>
-		<p>Each variant produced 55 calls, 165 in total, run once, on 2026-09-18.</p>
+		<p>Each variant produced 55 calls, 165 in total, run once, on 2026-09-18. The replay's own artefacts are not in the public repository, so the table below is its record rather than something you can re-derive from the code; nothing else on this site depends on it.</p>
 	</section>
 
 	<section class="section">

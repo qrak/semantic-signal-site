@@ -38,7 +38,7 @@ Key facts, all verifiable in the repository:
 
 - [qrak/LLM_trader](https://github.com/qrak/LLM_trader): the engine, dashboard and indicator library
 - [qrak/semantic-signal-site](https://github.com/qrak/semantic-signal-site): this website
-- [qrak/ti_numba](https://github.com/qrak/ti_numba): the Numba technical-indicator library this work is based on
+- [qrak/ti_numba](https://github.com/qrak/ti_numba): a standalone Numba technical-indicator library by the same author
 - [qrak/DiscordCryptoAnalyzer](https://github.com/qrak/DiscordCryptoAnalyzer): the earlier Discord bot, predecessor to the current project
 - Live dashboard: https://semanticsignal.qrak.org
 

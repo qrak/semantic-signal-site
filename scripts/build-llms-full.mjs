@@ -17,11 +17,14 @@ const dist = join(root, 'dist');
 /** Page order and titles for the document. */
 const ORDER = [
 	['index.html', 'https://qrak.org/', 'Home'],
+	['results/index.html', 'https://qrak.org/results/', 'Results — the paper-trading ledger'],
 	['story/index.html', 'https://qrak.org/story/', 'The full development story & technology'],
 	['articles/index.html', 'https://qrak.org/articles/', 'Articles'],
 	['articles/chart-vision/index.html', 'https://qrak.org/articles/chart-vision/', 'How the bot reads charts'],
 	['articles/vector-memory/index.html', 'https://qrak.org/articles/vector-memory/', 'Vector memory'],
 	['articles/executor-separation/index.html', 'https://qrak.org/articles/executor-separation/', 'From paper to a live executor'],
+	['articles/measurement/index.html', 'https://qrak.org/articles/measurement/', 'Where the numbers come from'],
+	['articles/offline-replay/index.html', 'https://qrak.org/articles/offline-replay/', 'Replaying historical setups'],
 	['about/index.html', 'https://qrak.org/about/', 'About the developer'],
 	['contact/index.html', 'https://qrak.org/contact/', 'Contact'],
 	['disclaimer/index.html', 'https://qrak.org/disclaimer/', 'Risk disclaimer'],

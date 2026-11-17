@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import claims from '../data/claims.json';
 
 const TESTS_TOTAL = claims.tests.collected.toLocaleString('en-US');
+const SUITE_SECONDS = claims.tests.suite_seconds;
 ---
 
 <Layout
@@ -14,7 +15,7 @@ const TESTS_TOTAL = claims.tests.collected.toLocaleString('en-US');
 		<h1>An LLM trading agent that reads candlestick charts and keeps memory of its closed trades.</h1>
 		<p class="hero-sub">
 			Once per closed candle (4h on the public deployment) it renders a 1920×1080 chart, sends it to a
-			multimodal model with 65 indicators, the news context and its trade memory, then checks the answer
+			multimodal model with the numeric indicator stack, the news context and its trade memory, then checks the answer
 			with deterministic rules before a paper trade is booked.
 		</p>
 		<div class="cta-buttons">
@@ -27,8 +28,8 @@ const TESTS_TOTAL = claims.tests.collected.toLocaleString('en-US');
 		<dl class="status">
 			<div><dt>trading</dt><dd>simulated capital (paper)</dd></div>
 			<div><dt>executor</dt><dd>exchange testnet, no real funds</dd></div>
-			<div><dt>tests</dt><dd>{TESTS_TOTAL}, ~119 s full suite, ruff and pyright clean</dd></div>
-			<div><dt>providers</dt><dd>DeepSeek (live), Google, OpenRouter, LM Studio</dd></div>
+			<div><dt>tests</dt><dd>{TESTS_TOTAL}, ~{SUITE_SECONDS} s full suite, ruff and pyright clean</dd></div>
+			<div><dt>providers</dt><dd>OpenCode Go (live, deepseek-v4.1-flash), DeepSeek, Google, OpenRouter, LM Studio</dd></div>
 		</dl>
 	</section>
 
@@ -96,11 +97,11 @@ const TESTS_TOTAL = claims.tests.collected.toLocaleString('en-US');
 		<h2>Sources</h2>
 		<p>Every number on this page comes from a file in the repository:</p>
 		<pre><code>chart image 1920x1080    src/analyzer/pattern_engine/chart_generator.py
-market data, 50 lvls     config/config.ini · src/analyzer/data_fetcher.py
+market data, 50 lvls     src/analyzer/data_fetcher.py (limit=50)
 trade memory 768D        src/trading/vector_memory.py (BAAI/bge-base-en-v1.5)
 risk limits, pre-entry   src/trading/position_management.py
 agent docs            AGENTS.md + one per package under src/ (src/trading, src/analyzer, ...)
-tests {TESTS_TOTAL}            python -m pytest tests -q   -&gt; all passing, ~119 s</code></pre>
+tests {TESTS_TOTAL}            python -m pytest tests -q   -&gt; 0 failures, ~{SUITE_SECONDS} s</code></pre>
 	</section>
 
 	<section class="risk-disclaimer">

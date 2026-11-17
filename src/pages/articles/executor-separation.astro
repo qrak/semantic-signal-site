@@ -5,7 +5,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 <ArticleLayout
 	title="Order Execution as a Separate Service — Semantic Signal"
 	description="Why the engine does not place orders itself, the seven checks a decision passes in the executor before an order leaves, the verdict journal, and the state of the live path."
-	meta="Article · first published August 2026 · updated October 2026"
+	meta="Article · first published August 2026 · updated November 2026"
 >
 	<span slot="title">Order execution as a separate service</span>
 	<p slot="subtitle" class="subtitle">Reasoning and order placement are two processes with opposite failure modes. This page describes the split, the checks in between, and what is still missing before real capital.</p>
@@ -47,7 +47,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 		<h2>Where this stands (October 2026)</h2>
 		<ul>
 			<li>The executor runs against an exchange <strong>testnet</strong> (<code>ENABLE_TESTNET=true</code>, sandbox endpoints). It has placed test orders and it has never touched real funds.</li>
-			<li>It was last exercised in <strong>August 2026</strong>. Since then the work went into the engine, the tests and the R/R policy, so the live path is the least recently certified part of the system.</li>
+			<li>It was last exercised in <strong>November 2026</strong>: the verdict journal in the bot's repository has executed entries up to 2026-11-15. Since then the work went into the engine, the tests and the R/R policy, so the live path is the least recently certified part of the system.</li>
 			<li>The weakest part is <strong>reconciliation</strong>: proving that what the exchange holds matches what the journal claims, including late fills and partially executed orders. That has to be boring and reliable before any real capital is considered, and it is not there yet.</li>
 			<li>Capital stays simulated until the pipeline has survived a long enough period to say something. That is a decision, not a limitation being hidden.</li>
 		</ul>

@@ -14,7 +14,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 		<h2>The rule</h2>
 		<p>No number on this site is typed by hand. The tables below are printed by one script from the bot's own runtime files plus a single public price request:</p>
 		<pre><code>python scripts/results_report.py</code></pre>
-		<p>Inputs: <code>data/trading/statistics.json</code>, <code>data/trading/api_costs.json</code>, <code>data/trading/trade_history.db</code>, <code>data/trading/metrics/cycles.jsonl</code>, and one Binance klines request for the benchmark. The current figures, regenerated from a frozen ledger snapshot, are on the <a href="/results">results page</a>; this page keeps the output of a run on <strong>2026-11-01</strong>, including the numbers that looked worse, and the cost totals grow with every cycle after it.</p>
+		<p>Inputs: <code>data/trading/statistics.json</code>, <code>data/trading/api_costs.json</code>, <code>data/trading/trade_history.db</code>, <code>data/trading/metrics/cycles.jsonl</code>, and one Binance klines request for the benchmark. The current figures, regenerated from a frozen ledger snapshot, are on the <a href="/results">results page</a>. The tables below are the output of a run on <strong>2026-11-01</strong>, including the numbers that looked worse; that run's frozen snapshot is not in the public repository, so these tables are kept as an example of the method and cannot be re-derived from it today.</p>
 	</section>
 
 	<section class="section">
@@ -52,7 +52,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 			<tr><th>Input / output tokens</th><td>8,758,244 / 4,196,653</td></tr>
 			<tr><th>Net after inference</th><td>+$9.28</td></tr>
 		</table>
-		<p>Costs are the provider rate-table estimates the bot records while running (<code>config/model_pricing.json</code>, <code>config/peak_rates.json</code>), not invoice reconciliation. Per cycle, across the 83 recorded cycles: mean <strong>$0.0125</strong>, median latency <strong>277 s</strong>.</p>
+		<p>Costs are the provider rate-table estimates the bot records while running (<code>config/model_pricing.json</code>, and the optional <code>config/peak_rates.json</code> whose tracked template is <code>peak_rates.example.json</code>), not invoice reconciliation. Per cycle, across the 83 recorded cycles: mean <strong>$0.0125</strong>, median latency <strong>277 s</strong>.</p>
 		<p>Inference cost is not a footnote here: the expected-value rule that the model is given reads from the same trade history, and $6.44 of model usage against $15.72 of gross paper profit is most of the result.</p>
 	</section>
 
@@ -85,7 +85,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 	<div class="cta-box">
 		<p>The same ledger, with the trade-by-trade table, is on the results page.</p>
 		<a href="/results/" class="btn btn-primary">Results page</a>
-		<a href="https://github.com/qrak/LLM_trader/blob/master/docs/RESULTS.md" target="_blank" rel="noopener" class="btn btn-secondary">RESULTS.md ↗</a>
+		<a href="https://github.com/qrak/LLM_trader/blob/master/docs/PUBLIC-NUMBERS.md" target="_blank" rel="noopener" class="btn btn-secondary">PUBLIC-NUMBERS.md ↗</a>
 	</div>
 
 	<div class="disclaimer-box">
